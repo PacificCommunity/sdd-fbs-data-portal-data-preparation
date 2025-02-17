@@ -18,12 +18,12 @@ output/*.docx
 output/*.json
 output/*.xml
 output/*.tsv
-raw_data/*.csv
-raw_data/*.tsv
-raw_data/*.xlsx
-raw_data/*.zip
-raw_data/*.json
-raw_data/*.xml
+data/*.csv
+data/*.tsv
+data/*.xlsx
+data/*.zip
+data/*.json
+data/*.xml
 
 # Session Data files
 .RData
