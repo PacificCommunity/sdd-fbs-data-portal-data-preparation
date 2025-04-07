@@ -83,6 +83,11 @@ while (index <= total_columns){
   index <- index + 1
 }
 
+#Sequential appending to the table
+
+fbsCPITable <- rbind(cpiWeight, cpiIndex)
+
+
 #### ************************** Table of seasonal index changes processing ********************************** ####
 
 mmSeasonal <- read_excel("../data/cpi_data.xlsx", sheet = "mnthSeasonal")
@@ -103,6 +108,12 @@ mmSeasonal <- mmSeasonal |>
          DECIMALS = 1
   ) |>
   select(-Division, -Month, -period, -SAdjusted)
+
+#Sequential appending to the table
+
+fbsCPITable <- rbind(fbsCPITable, mmSeasonal)
+
+
 
 #### ************************** Table monthly seasonal changes ********************************** ####
 
@@ -158,6 +169,10 @@ while (index <= total_columns){
   index <- index + 1
 }
 
+#Sequential appending to the table
+
+fbsCPITable <- rbind(fbsCPITable, mmIndex)
+
 #### ************************** Table of national seasonal index changes processing ********************************** ####
 
 mmSeasonal <- read_excel("../data/cpi_data.xlsx", sheet = "natChange")
@@ -176,6 +191,11 @@ mmSeasonal <- mmSeasonal |>
          COMMENT = "",
          DECIMALS = 1
   )
+
+#Sequential appending to the table
+
+fbsCPITable <- rbind(fbsCPITable, mmSeasonal)
+
 
 #### ************************** Table of national inflation rates processing ********************************** ####
 
@@ -197,6 +217,11 @@ avgInflation <- avgInflation |>
          DECIMALS = 1
   )|>
   rename(OBS_VALUE = avgInflation)
+
+
+#Sequential appending to the table
+
+fbsCPITable <- rbind(fbsCPITable, avgInflation)
 
 
 #### ************************** Table of national CPI change processing ********************************** ####
@@ -254,6 +279,11 @@ while (index <= total_columns){
 }
 
 
+#Sequential appending to the table
+
+fbsCPITable <- rbind(fbsCPITable, natCPIIndex)
+
+
 #### ************************** Table of Central inflation rate change processing ********************************** ####
 
 centralInflation <- read_excel("../data/cpi_data.xlsx", sheet = "centralInflation")
@@ -274,6 +304,10 @@ centralInflation <- centralInflation |>
          DECIMALS = 1
   )|>
   rename(OBS_VALUE = avgInflation)
+
+#Sequential appending to the table
+
+fbsCPITable <- rbind(fbsCPITable, centralInflation)
 
 #### ************************** Table of Central division CPI change processing ********************************** ####
 
@@ -329,6 +363,10 @@ while (index <= total_columns){
   index <- index + 1
 }
 
+#Sequential appending to the table
+
+fbsCPITable <- rbind(fbsCPITable, centralCPIIndex)
+
 
 #### ************************** Table of western inflation rate change processing ********************************** ####
 
@@ -351,6 +389,10 @@ westernInflation <- westernInflation |>
   )|>
   rename(OBS_VALUE = avgInflation)
 
+
+#Sequential appending to the table
+
+fbsCPITable <- rbind(fbsCPITable, westernInflation)
 
 #### ************************** Table of Western division CPI change processing ********************************** ####
 
@@ -406,6 +448,9 @@ while (index <= total_columns){
   index <- index + 1
 }
 
+#Sequential appending to the table
+
+fbsCPITable <- rbind(fbsCPITable, westernCPIIndex)
 
 #### ************************** Table of northern inflation rate change processing ********************************** ####
 
@@ -427,6 +472,9 @@ northernInflation <- northernInflation |>
          DECIMALS = 1
   )
 
+#Sequential appending to the table
+
+fbsCPITable <- rbind(fbsCPITable, northernInflation)
 
 #### ************************** Table of northern division CPI change processing ********************************** ####
 
@@ -483,28 +531,11 @@ while (index <= total_columns){
 }
 
 
+#Sequential appending to the table
+
+fbsCPITable <- rbind(fbsCPITable, northernCPIIndex)
 
 
+#### ************************* Write final table to output folder ********************************************* ####
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+write.csv(fbsCPITable, "../output/cpi/DF_CPI.csv", row.names = FALSE)
