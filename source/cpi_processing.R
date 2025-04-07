@@ -158,6 +158,46 @@ while (index <= total_columns){
   index <- index + 1
 }
 
+#### ************************** Table of national seasonal index changes processing ********************************** ####
+
+mmSeasonal <- read_excel("../data/cpi_data.xlsx", sheet = "natChange")
+
+mmSeasonal <- mmSeasonal |>
+  select(TIME_PERIOD, OBS_VALUE) |>
+  mutate(FREQ = ifelse(nchar(TIME_PERIOD)==4, "A", "M"),
+         REF_AREA = "FJ",
+         INDICATOR = "IDX",
+         ITEM = "_T",
+         TRANSFORMATION = "N",
+         SEASONAL_ADJUST = "S",
+         UNIT_MEASURE = "INDEX",
+         BASE_YEAR = "_T",
+         OBS_STATUS = "",
+         COMMENT = "",
+         DECIMALS = 1
+  )
+
+#### ************************** Table of national inflation rates processing ********************************** ####
+
+avgInflation <- read_excel("../data/cpi_data.xlsx", sheet = "natChange")
+
+avgInflation <- avgInflation |>
+  filter(!is.na(avgInflation)) |>
+  select(TIME_PERIOD, avgInflation) |>
+  mutate(FREQ = ifelse(nchar(TIME_PERIOD)==4, "A", "M"),
+         REF_AREA = "FJ",
+         INDICATOR = "IDX",
+         ITEM = "_T",
+         TRANSFORMATION = "N",
+         SEASONAL_ADJUST = "S",
+         UNIT_MEASURE = "INDEX",
+         BASE_YEAR = "_T",
+         OBS_STATUS = "",
+         COMMENT = "",
+         DECIMALS = 1
+  )|>
+  rename(OBS_VALUE = avgInflation)
+
 
 
 
