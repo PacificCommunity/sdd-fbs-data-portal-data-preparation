@@ -537,5 +537,22 @@ fbsCPITable <- rbind(fbsCPITable, northernCPIIndex)
 
 
 #### ************************* Write final table to output folder ********************************************* ####
+#re-order the columns in the proper order
+fbsCPITable <- fbsCPITable |>
+  select(
+    FREQ,
+    TIME_PERIOD,
+    REF_AREA,
+    INDICATOR,
+    ITEM,
+    TRANSFORMATION,
+    SEASONAL_ADJUST,
+    OBS_VALUE,
+    UNIT_MEASURE,
+    BASE_YEAR,
+    OBS_STATUS,
+    COMMENT,
+    DECIMALS
+  )
 
 write.csv(fbsCPITable, "../output/cpi/DF_CPI.csv", row.names = FALSE)
