@@ -61,7 +61,7 @@ selection <- selection |>
   )
 
 #Write table to output csv file
-write.csv(selection, "../output/DF_VISITORS_TBL1.csv", row.names = FALSE)
+write.csv(selection, "../output/visitors/DF_VISITORS_TBL1.csv", row.names = FALSE)
 
 
 #### **************************** Table 2 processing ************************************* ####
@@ -118,7 +118,7 @@ selection <- selection |>
   )
 
 #Write table to output csv file
-write.csv(selection, "../output/DF_VISITORS_TBL2.csv", row.names = FALSE)
+write.csv(selection, "../output/visitors/DF_VISITORS_TBL2.csv", row.names = FALSE)
 
 
 #### **************************** Table 3 processing ************************************* ####
@@ -175,7 +175,7 @@ selection <- selection |>
   )
 
 #Write table to output csv file
-write.csv(selection, "../output/DF_VISITORS_TBL3.csv", row.names = FALSE)
+write.csv(selection, "../output/visitors/DF_VISITORS_TBL3.csv", row.names = FALSE)
 
 
 #### **************************** Table 4 processing ************************************* ####
@@ -232,4 +232,4 @@ selection <- selection |>
   )
 
 #Write table to output csv file
-write.csv(selection, "../output/DF_VISITORS_TBL4.csv", row.names = FALSE)
+write.csv(selection, "../output/visitors/DF_VISITORS_TBL4.csv", row.names = FALSE)
