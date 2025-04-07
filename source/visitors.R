@@ -9,7 +9,7 @@ setwd(repository)
 
 #### ************************** Table 1 processing ********************************** ####
 
-visitors <- read_excel("../data/visitors_tables.xlsx", sheet = "T1")
+visitors <- read_excel("../data/visitor.xlsx", sheet = "T1")
 
 colHeader <- colnames(visitors)[4]
 selection <- visitors |>
@@ -66,7 +66,7 @@ write.csv(selection, "../output/visitors/DF_VISITORS_TBL1.csv", row.names = FALS
 
 #### **************************** Table 2 processing ************************************* ####
 
-visitors <- read_excel("../data/visitors_tables.xlsx", sheet = "T2")
+visitors <- read_excel("../data/visitor.xlsx", sheet = "T2")
 
 colHeader <- colnames(visitors)[2]
 selection <- visitors |>
@@ -123,7 +123,7 @@ write.csv(selection, "../output/visitors/DF_VISITORS_TBL2.csv", row.names = FALS
 
 #### **************************** Table 3 processing ************************************* ####
 
-visitors <- read_excel("../data/visitors_tables.xlsx", sheet = "T3")
+visitors <- read_excel("../data/visitor.xlsx", sheet = "T3")
 
 colHeader <- colnames(visitors)[2]
 selection <- visitors |>
@@ -180,7 +180,7 @@ write.csv(selection, "../output/visitors/DF_VISITORS_TBL3.csv", row.names = FALS
 
 #### **************************** Table 4 processing ************************************* ####
 
-visitors <- read_excel("../data/visitors_tables.xlsx", sheet = "T4")
+visitors <- read_excel("../data/visitor.xlsx", sheet = "T4")
 
 colHeader <- colnames(visitors)[2]
 selection <- visitors |>
