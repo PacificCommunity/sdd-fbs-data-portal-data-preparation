@@ -20,7 +20,7 @@ cpiWeight <- cpiWeight |>
          TRANSFORMATION = "N",
          SEASONAL_ADJUST = "N",
          OBS_VALUE = Weight,
-         UNIT_MEASURE = "INDEX",
+         UNIT_MEASURE = "U",
          BASE_YEAR = "_T",
          OBS_STATUS = "",
          COMMENT = "",
@@ -88,7 +88,7 @@ while (index <= total_columns){
 fbsCPITable <- rbind(cpiWeight, cpiIndex)
 
 
-#### ************************** Table of seasonal index changes processing ********************************** ####
+#### ************************** Table of monthly seasonal index changes processing ********************************** ####
 
 mmSeasonal <- read_excel("../data/cpi_data.xlsx", sheet = "mnthSeasonal")
 
@@ -102,7 +102,7 @@ mmSeasonal <- mmSeasonal |>
          SEASONAL_ADJUST = "S",
          OBS_VALUE = SAdjusted,
          UNIT_MEASURE = "INDEX",
-         BASE_YEAR = "_T",
+         BASE_YEAR = 2014,
          OBS_STATUS = "",
          COMMENT = "",
          DECIMALS = 1
@@ -135,7 +135,7 @@ mmIndex <- selection |>
          TRANSFORMATION = ifelse(nchar(TIME_PERIOD)==4, "GIY", "G1M"),
          SEASONAL_ADJUST = "S",
          UNIT_MEASURE = "INDEX",
-         BASE_YEAR = "",
+         BASE_YEAR = 2014,
          OBS_STATUS = "",
          COMMENT = "",
          DECIMALS = 1
@@ -159,7 +159,7 @@ while (index <= total_columns){
            TRANSFORMATION = ifelse(nchar(TIME_PERIOD)==4, "GIY", "G1M"),
            SEASONAL_ADJUST = "S",
            UNIT_MEASURE = "INDEX",
-           BASE_YEAR = "",
+           BASE_YEAR = 2014,
            OBS_STATUS = "",
            COMMENT = "",
            DECIMALS = 1
@@ -186,7 +186,7 @@ mmSeasonal <- mmSeasonal |>
          TRANSFORMATION = "N",
          SEASONAL_ADJUST = "S",
          UNIT_MEASURE = "INDEX",
-         BASE_YEAR = "_T",
+         BASE_YEAR = 2014,
          OBS_STATUS = "",
          COMMENT = "",
          DECIMALS = 1
@@ -211,7 +211,7 @@ avgInflation <- avgInflation |>
          TRANSFORMATION = "N",
          SEASONAL_ADJUST = "S",
          UNIT_MEASURE = "INDEX",
-         BASE_YEAR = "_T",
+         BASE_YEAR = 2014,
          OBS_STATUS = "",
          COMMENT = "",
          DECIMALS = 1
