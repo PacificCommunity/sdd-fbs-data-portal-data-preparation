@@ -7,7 +7,7 @@ library(readxl)
 repository <- file.path(dirname(rstudioapi::getSourceEditorContext()$path))
 setwd(repository)
 
-#### ************************** Table 1 processing ********************************** ####
+#### ************************** Table weight processing ********************************** ####
 
 cpiWeight <- read_excel("../data/cpi_data.xlsx", sheet = "weight")
 
@@ -25,5 +25,102 @@ cpiWeight <- cpiWeight |>
          OBS_STATUS = "",
          COMMENT = "",
          DECIMALS = 1
+         ) |>
+  select(-code, -Division, -Weight)
+
+#### ************************** Table index processing ********************************** ####
+
+cpi_index <- read_excel("../data/cpi_data.xlsx", sheet = "index")
+
+colHeader <- colnames(cpi_index)[2]
+selection <- cpi_index |>
+  select(item, colHeader) |>
+  rename(ITEM = item)
+
+selection$TIME_PERIOD <- colHeader
+colnames(selection)[2] <- "OBS_VALUE"
+
+#Get first record
+cpiIndex <- selection |>
+  mutate(FREQ = ifelse(nchar(TIME_PERIOD) == 4, "A", "M"),
+         REF_AREA = "FJ",
+         INDICATOR = "IDX",
+         TRANSFORMATION = ifelse(nchar(TIME_PERIOD)==4, "GIY", "G1M"),
+         SEASONAL_ADJUST = "S",
+         UNIT_MEASURE = "INDEX",
+         BASE_YEAR = "",
+         OBS_STATUS = "",
+         COMMENT = "",
+         DECIMALS = 1
          )
+
+index = 3
+total_columns <- ncol(cpi_index)
+
+#Loop to get the other columns
+
+while (index <= total_columns){
+  ncolHead <- colnames(cpi_index)[index]
+  nextData <- cpi_index |> select(item, ncolHead)
+  nextData$TIME_PERIOD <- ncolHead
+  colnames(nextData)[2] <- "OBS_VALUE"
+  nextData$OBS_VALUE <- as.numeric(nextData$OBS_VALUE)
+  nextData <- nextData |>
+    mutate(FREQ = ifelse(nchar(TIME_PERIOD) == 4, "A", "M"),
+    REF_AREA = "FJ",
+    INDICATOR = "IDX",
+    TRANSFORMATION = ifelse(nchar(TIME_PERIOD)==4, "GIY", "G1M"),
+    SEASONAL_ADJUST = "S",
+    UNIT_MEASURE = "INDEX",
+    BASE_YEAR = "",
+    OBS_STATUS = "",
+    COMMENT = "",
+    DECIMALS = 1
+    ) |>
+  rename(ITEM = item)
+  
+  cpiIndex <- rbind(cpiIndex, nextData)
+  index <- index + 1
+}
+
+#### ************************** Table of seasonal index changes processing ********************************** ####
+
+mmSeasonal <- read_excel("../data/cpi_data.xlsx", sheet = "mnthSeasonal")
+
+mmSeasonal <- mmSeasonal |>
+  mutate(FREQ = "M",
+         TIME_PERIOD = period,
+         REF_AREA = "FJ",
+         INDICATOR = "IDX",
+         ITEM = "_T",
+         TRANSFORMATION = "N",
+         SEASONAL_ADJUST = "S",
+         OBS_VALUE = SAdjusted,
+         UNIT_MEASURE = "INDEX",
+         BASE_YEAR = "_T",
+         OBS_STATUS = "",
+         COMMENT = "",
+         DECIMALS = 1
+  ) |>
+  select(-Division, -Month, -period, -SAdjusted)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
