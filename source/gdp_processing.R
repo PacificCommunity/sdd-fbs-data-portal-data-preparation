@@ -22,12 +22,13 @@ rgdpWeight_DT <- rgdpWeight |>
          UNIT_MULT  ="",
          OBS_STATUS  = "",
          DATA_SOURCE = "",
-         OBS_COMMENT = ""
+         OBS_COMMENT = "",
+         DECIMALS = 1
          )
 
 #re-order the columns in the proper order
 rgdpWeight_DT <- rgdpWeight_DT |>
-  select(FREQ, TIME_PERIOD, REF_AREA, INDICATOR, TRANSFORMATION, INDUSTRY_TYPE, OBS_VALUE, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, DATA_SOURCE, OBS_COMMENT)
+  select(FREQ, TIME_PERIOD, REF_AREA, INDICATOR, TRANSFORMATION, INDUSTRY_TYPE, OBS_VALUE, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, DATA_SOURCE, OBS_COMMENT, DECIMALS)
 
 #Remove the bWeight column from the dataframe
 
@@ -88,7 +89,7 @@ while (index <= total_columns){
 }
 
 rgdp_DT <- rgdp |>
-  select(FREQ, TIME_PERIOD, REF_AREA, INDICATOR, TRANSFORMATION, INDUSTRY_TYPE, OBS_VALUE, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, DATA_SOURCE, OBS_COMMENT)
+  select(FREQ, TIME_PERIOD, REF_AREA, INDICATOR, TRANSFORMATION, INDUSTRY_TYPE, OBS_VALUE, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, DATA_SOURCE, OBS_COMMENT, DECIMALS)
 
 #Combine the datatables together
 
@@ -158,14 +159,38 @@ while (index <= total_columns){
 realGDP_combine <- rbind(realgdp, rgdpPercent)
 
 realGDP_combine <- realGDP_combine |>
-  select(FREQ, TIME_PERIOD, REF_AREA, INDICATOR, TRANSFORMATION, INDUSTRY_TYPE, OBS_VALUE, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, DATA_SOURCE, OBS_COMMENT)
+  select(FREQ, TIME_PERIOD, REF_AREA, INDICATOR, TRANSFORMATION, INDUSTRY_TYPE, OBS_VALUE, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, DATA_SOURCE, OBS_COMMENT, DECIMALS)
 
+#### ******************************** Norminal gdp percentage processing ***************************************** ####
 
+ngdp_val <- read_excel("../data/rgdp_data.xlsx", sheet = "NGDP_VAL")
 
+colHeader <- colnames(ngdp_val)[3]
+selection <- ngdp_val |>
+  select(id, colHeader) |>
+  rename(INDUSTRY_TYPE = id)
 
+selection$TIME_PERIOD <- colHeader
+colnames(selection)[2] <- "OBS_VALUE"
 
+#Get first record
+ngdpVal <- selection |>
+  mutate(FREQ = "A",
+         REF_AREA = "FJ",
+         INDICATOR = "NRGDP",
+         TRANSFORMATION = "",
+         UNIT_MEASURE = "FJD",
+         UNIT_MULT = "",
+         OBS_STATUS =  ifelse(grepl("r", TIME_PERIOD), "R",
+                              ifelse(grepl("p", TIME_PERIOD), "P", "")),
+         DATA_SOURCE = "",
+         OBS_COMMENT = "",
+         DECIMALS = 1,
+         TIME_PERIOD = substr(TIME_PERIOD, 1, 4)
+  )
 
-
+index = 4
+total_columns <- ncol(ngdp_val)
 
 
 
