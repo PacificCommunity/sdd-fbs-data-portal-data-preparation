@@ -161,7 +161,7 @@ realGDP_combine <- rbind(realgdp, rgdpPercent)
 realGDP_combine <- realGDP_combine |>
   select(FREQ, TIME_PERIOD, REF_AREA, INDICATOR, TRANSFORMATION, INDUSTRY_TYPE, OBS_VALUE, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, DATA_SOURCE, OBS_COMMENT, DECIMALS)
 
-#### ******************************** Norminal gdp percentage processing ***************************************** ####
+#### ******************************** Norminal gdp processing ***************************************** ####
 
 ngdp_val <- read_excel("../data/rgdp_data.xlsx", sheet = "NGDP_VAL")
 
