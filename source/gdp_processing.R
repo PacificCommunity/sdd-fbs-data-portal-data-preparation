@@ -293,4 +293,73 @@ combine_nominal_gdp <- combine_nominal_gdp |>
 real_nominal_gdp_merge <- rbind(realGDP_combine, combine_nominal_gdp)
 
 #Write the final file to the output folder
-write.csv(real_nominal_gdp_merge, "../output/na/DF_GDP.csv", row.names = FALSE)
+#write.csv(real_nominal_gdp_merge, "../output/na/DF_GDP.csv", row.names = FALSE)
+
+#### ***************************** Real GDP Contribution ******************************************** ####
+
+rgdp_cnt <- read_excel("../data/rgdp_data.xlsx", sheet = "RGDP_CNT")
+
+colHeader <- colnames(rgdp_cnt)[3]
+selection <- rgdp_cnt |>
+  select(id, colHeader) |>
+  rename(INDUSTRY_TYPE = id)
+
+selection$TIME_PERIOD <- colHeader
+colnames(selection)[2] <- "OBS_VALUE"
+
+#Get first record
+rgdpContribution <- selection |>
+  mutate(FREQ = "A",
+         REF_AREA = "FJ",
+         INDICATOR = "NRGDPCNT",
+         TRANSFORMATION = "",
+         UNIT_MEASURE = "PERCENT",
+         UNIT_MULT = "",
+         OBS_STATUS =  ifelse(grepl("r", TIME_PERIOD), "R",
+                              ifelse(grepl("p", TIME_PERIOD), "P", "")),
+         DATA_SOURCE = "",
+         OBS_COMMENT = "",
+         DECIMALS = 1,
+         TIME_PERIOD = substr(TIME_PERIOD, 1, 4)
+  )
+
+index = 4
+total_columns <- ncol(rgdp_cnt)
+
+#Loop to get the other columns
+
+while (index <= total_columns){
+  ncolHead <- colnames(rgdp_cnt)[index]
+  nextData <- rgdp_cnt |> select(id, ncolHead)
+  nextData$TIME_PERIOD <- ncolHead
+  colnames(nextData)[2] <- "OBS_VALUE"
+  nextData$OBS_VALUE <- as.numeric(nextData$OBS_VALUE)
+  nextData <- nextData |>
+    mutate(FREQ = "A",
+           REF_AREA = "FJ",
+           INDICATOR = "RLGDPCNT",
+           TRANSFORMATION = "",
+           UNIT_MEASURE = "PERCENT",
+           UNIT_MULT = "",
+           OBS_STATUS = ifelse(grepl("r", TIME_PERIOD), "R",
+                               ifelse(grepl("p", TIME_PERIOD), "P", "")),
+           DATA_SOURCE = "",
+           OBS_COMMENT = "",
+           DECIMALS = 1,
+           TIME_PERIOD = substr(TIME_PERIOD, 1, 4)
+    ) |>
+    rename(INDUSTRY_TYPE = id)
+  
+  rgdpContribution <- rbind(rgdpContribution, nextData)
+  index <- index + 1
+}
+
+#Combing the nominal gdp and gdp percent change
+rgdpContribution <- rgdpContribution |>
+  select(FREQ, TIME_PERIOD, REF_AREA, INDICATOR, TRANSFORMATION, INDUSTRY_TYPE, OBS_VALUE, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, DATA_SOURCE, OBS_COMMENT, DECIMALS)
+
+
+
+real_nominal_rcont_gdp <- rbind(real_nominal_gdp_merge, rgdpContribution)
+
+write.csv(real_nominal_rcont_gdp, "../output/na/DF_GDP.csv", row.names = FALSE)
