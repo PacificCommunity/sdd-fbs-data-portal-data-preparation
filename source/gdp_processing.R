@@ -180,7 +180,7 @@ ngdpVal <- selection |>
          INDICATOR = "NRGDP",
          TRANSFORMATION = "",
          UNIT_MEASURE = "FJD",
-         UNIT_MULT = "",
+         UNIT_MULT = 6,
          OBS_STATUS =  ifelse(grepl("r", TIME_PERIOD), "R",
                               ifelse(grepl("p", TIME_PERIOD), "P", "")),
          DATA_SOURCE = "",
@@ -192,7 +192,108 @@ ngdpVal <- selection |>
 index = 4
 total_columns <- ncol(ngdp_val)
 
+#Loop to get the other columns
 
+while (index <= total_columns){
+  ncolHead <- colnames(ngdp_val)[index]
+  nextData <- ngdp_val |> select(id, ncolHead)
+  nextData$TIME_PERIOD <- ncolHead
+  colnames(nextData)[2] <- "OBS_VALUE"
+  nextData$OBS_VALUE <- as.numeric(nextData$OBS_VALUE)
+  nextData <- nextData |>
+    mutate(FREQ = "A",
+           REF_AREA = "FJ",
+           INDICATOR = "NRGDP",
+           TRANSFORMATION = "",
+           UNIT_MEASURE = "FJD",
+           UNIT_MULT = 6,
+           OBS_STATUS = ifelse(grepl("r", TIME_PERIOD), "R",
+                               ifelse(grepl("p", TIME_PERIOD), "P", "")),
+           DATA_SOURCE = "",
+           OBS_COMMENT = "",
+           DECIMALS = 1,
+           TIME_PERIOD = substr(TIME_PERIOD, 1, 4)
+    ) |>
+    rename(INDUSTRY_TYPE = id)
+  
+  ngdpVal <- rbind(ngdpVal, nextData)
+  index <- index + 1
+}
+
+#### ******************************** Nominal gdp percentage processing ***************************************** ####
+
+ngdp_per <- read_excel("../data/rgdp_data.xlsx", sheet = "NGDP_PER")
+
+colHeader <- colnames(ngdp_per)[3]
+selection <- ngdp_per |>
+  select(id, colHeader) |>
+  rename(INDUSTRY_TYPE = id)
+
+selection$TIME_PERIOD <- colHeader
+colnames(selection)[2] <- "OBS_VALUE"
+
+#Get first record
+ngdpPercent <- selection |>
+  mutate(FREQ = "A",
+         REF_AREA = "FJ",
+         INDICATOR = "NRGDP",
+         TRANSFORMATION = "YM1",
+         UNIT_MEASURE = "PERCENT",
+         UNIT_MULT = "",
+         OBS_STATUS =  ifelse(grepl("r", TIME_PERIOD), "R",
+                              ifelse(grepl("p", TIME_PERIOD), "P", "")),
+         DATA_SOURCE = "",
+         OBS_COMMENT = "",
+         DECIMALS = 1,
+         TIME_PERIOD = substr(TIME_PERIOD, 1, 4)
+  )
+
+
+index = 4
+total_columns <- ncol(ngdp_per)
+
+#Loop to get the other columns
+
+while (index <= total_columns){
+  ncolHead <- colnames(ngdp_per)[index]
+  nextData <- ngdp_per |> select(id, ncolHead)
+  nextData$TIME_PERIOD <- ncolHead
+  colnames(nextData)[2] <- "OBS_VALUE"
+  nextData$OBS_VALUE <- as.numeric(nextData$OBS_VALUE)
+  nextData <- nextData |>
+    mutate(FREQ = "A",
+           REF_AREA = "FJ",
+           INDICATOR = "NRGDP",
+           TRANSFORMATION = "YM1",
+           UNIT_MEASURE = "PERCENT",
+           UNIT_MULT = "",
+           OBS_STATUS = ifelse(grepl("r", TIME_PERIOD), "R",
+                               ifelse(grepl("p", TIME_PERIOD), "P", "")),
+           DATA_SOURCE = "",
+           OBS_COMMENT = "",
+           DECIMALS = 1,
+           TIME_PERIOD = substr(TIME_PERIOD, 1, 4)
+    ) |>
+    rename(INDUSTRY_TYPE = id)
+  
+  ngdpPercent <- rbind(ngdpPercent, nextData)
+  index <- index + 1
+}
+
+#Combing the nominal gdp and gdp percent change
+
+combine_nominal_gdp <- rbind(ngdpVal, ngdpPercent)
+
+combine_nominal_gdp <- combine_nominal_gdp |>
+  select(FREQ, TIME_PERIOD, REF_AREA, INDICATOR, TRANSFORMATION, INDUSTRY_TYPE, OBS_VALUE, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, DATA_SOURCE, OBS_COMMENT, DECIMALS)
+
+
+#Combining both the real and nominal gdp
+
+real_nominal_gdp_merge <- rbind(realGDP_combine, combine_nominal_gdp)
+
+#Write the final file to the output folder
+write.csv(real_nominal_gdp_merge, "../output/na/real_nominal_gdp.csv", row.names = FALSE)
 
 
 
