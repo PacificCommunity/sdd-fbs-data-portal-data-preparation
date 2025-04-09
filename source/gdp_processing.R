@@ -293,4 +293,4 @@ combine_nominal_gdp <- combine_nominal_gdp |>
 real_nominal_gdp_merge <- rbind(realGDP_combine, combine_nominal_gdp)
 
 #Write the final file to the output folder
-write.csv(real_nominal_gdp_merge, "../output/na/real_nominal_gdp.csv", row.names = FALSE)
+write.csv(real_nominal_gdp_merge, "../output/na/DF_GDP.csv", row.names = FALSE)
