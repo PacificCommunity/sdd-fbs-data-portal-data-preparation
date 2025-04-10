@@ -12,15 +12,17 @@ setwd(repository)
 rgdpWeight <- read_excel("../data/rgdp_data.xlsx", sheet = "RGDP_VAL")
 rgdpWeight_DT <- rgdpWeight |>
   select(id, bWeight) |>
-  rename(INDUSTRY_TYPE = id, OBS_VALUE = bWeight) |>
+  rename(INDUSTRY = id, OBS_VALUE = bWeight) |>
   mutate(FREQ = "A",
-         TIME_PERIOD = "_T",
+         TIME_PERIOD = "2014",
          REF_AREA = "FJ",
-         INDICATOR = "NMWGT",
-         TRANSFORMATION = "_T",
-         UNIT_MEASURE = "",
-         UNIT_MULT  ="",
+         INDICATOR = "WGT",
+         GDP_BREAKDOWN = "_T",
+         TRANSFORMATION = "N",
+         UNIT_MEASURE = "FJD",
+         UNIT_MULT  =6,
          OBS_STATUS  = "",
+         BASE_PER = "",
          DATA_SOURCE = "",
          OBS_COMMENT = "",
          DECIMALS = 1
@@ -28,7 +30,7 @@ rgdpWeight_DT <- rgdpWeight |>
 
 #re-order the columns in the proper order
 rgdpWeight_DT <- rgdpWeight_DT |>
-  select(FREQ, TIME_PERIOD, REF_AREA, INDICATOR, TRANSFORMATION, INDUSTRY_TYPE, OBS_VALUE, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, DATA_SOURCE, OBS_COMMENT, DECIMALS)
+  select(FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, DATA_SOURCE, OBS_COMMENT, DECIMALS)
 
 #Remove the bWeight column from the dataframe
 
@@ -37,7 +39,7 @@ rgdpWeight_v2 <- rgdpWeight |> select(-bWeight)
 colHeader <- colnames(rgdpWeight_v2)[3]
 selection <- rgdpWeight_v2 |>
   select(id, colHeader) |>
-  rename(INDUSTRY_TYPE = id)
+  rename(INDUSTRY = id)
 
 selection$TIME_PERIOD <- colHeader
 colnames(selection)[2] <- "OBS_VALUE"
@@ -46,12 +48,14 @@ colnames(selection)[2] <- "OBS_VALUE"
 rgdp <- selection |>
   mutate(FREQ = "A",
          REF_AREA = "FJ",
-         INDICATOR = "RLGDP",
+         INDICATOR = "RGDP",
+         GDP_BREAKDOWN = "",
          TRANSFORMATION = "",
          UNIT_MEASURE = "FJD",
          UNIT_MULT = 6,
          OBS_STATUS =  ifelse(grepl("r", TIME_PERIOD), "R",
                               ifelse(grepl("p", TIME_PERIOD), "P", "")),
+         BASE_PER = "",
          DATA_SOURCE = "",
          OBS_COMMENT = "",
          DECIMALS = 1
@@ -72,24 +76,26 @@ while (index <= total_columns){
     mutate(FREQ = "A",
            REF_AREA = "FJ",
            INDICATOR = "RLGDP",
+           GDP_BREAKDOWN = "",
            TRANSFORMATION = "",
            UNIT_MEASURE = "FJD",
            UNIT_MULT = 6,
            OBS_STATUS = ifelse(grepl("r", TIME_PERIOD), "R",
                                ifelse(grepl("p", TIME_PERIOD), "P", "")),
+           BASE_PER = "",
            DATA_SOURCE = "",
            OBS_COMMENT = "",
            DECIMALS = 1,
            TIME_PERIOD = substr(TIME_PERIOD, 1, 4)
     ) |>
-    rename(INDUSTRY_TYPE = id)
+    rename(INDUSTRY = id)
   
   rgdp <- rbind(rgdp, nextData)
   index <- index + 1
 }
 
 rgdp_DT <- rgdp |>
-  select(FREQ, TIME_PERIOD, REF_AREA, INDICATOR, TRANSFORMATION, INDUSTRY_TYPE, OBS_VALUE, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, DATA_SOURCE, OBS_COMMENT, DECIMALS)
+  select(FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, DATA_SOURCE, OBS_COMMENT, DECIMALS)
 
 #Combine the datatables together
 
@@ -102,7 +108,7 @@ gdpPercent <- read_excel("../data/rgdp_data.xlsx", sheet = "RGDP_PER")
 colHeader <- colnames(gdpPercent)[3]
 selection <- gdpPercent |>
   select(id, colHeader) |>
-  rename(INDUSTRY_TYPE = id)
+  rename(INDUSTRY = id)
 
 selection$TIME_PERIOD <- colHeader
 colnames(selection)[2] <- "OBS_VALUE"
@@ -112,11 +118,13 @@ rgdpPercent <- selection |>
   mutate(FREQ = "A",
          REF_AREA = "FJ",
          INDICATOR = "RLGDP",
+         GDP_BREAKDOWN = "",
          TRANSFORMATION = "YM1",
          UNIT_MEASURE = "PERCENT",
          UNIT_MULT = "",
          OBS_STATUS =  ifelse(grepl("r", TIME_PERIOD), "R",
                               ifelse(grepl("p", TIME_PERIOD), "P", "")),
+         BASE_PER = "",
          DATA_SOURCE = "",
          OBS_COMMENT = "",
          DECIMALS = 1,
@@ -138,17 +146,19 @@ while (index <= total_columns){
     mutate(FREQ = "A",
            REF_AREA = "FJ",
            INDICATOR = "RLGDP",
+           GDP_BREAKDOWN = "",
            TRANSFORMATION = "YM1",
            UNIT_MEASURE = "PERCENT",
            UNIT_MULT = "",
            OBS_STATUS = ifelse(grepl("r", TIME_PERIOD), "R",
                                ifelse(grepl("p", TIME_PERIOD), "P", "")),
+           BASE_PER = "",
            DATA_SOURCE = "",
            OBS_COMMENT = "",
            DECIMALS = 1,
            TIME_PERIOD = substr(TIME_PERIOD, 1, 4)
     ) |>
-    rename(INDUSTRY_TYPE = id)
+    rename(INDUSTRY = id)
   
   rgdpPercent <- rbind(rgdpPercent, nextData)
   index <- index + 1
@@ -159,7 +169,7 @@ while (index <= total_columns){
 realGDP_combine <- rbind(realgdp, rgdpPercent)
 
 realGDP_combine <- realGDP_combine |>
-  select(FREQ, TIME_PERIOD, REF_AREA, INDICATOR, TRANSFORMATION, INDUSTRY_TYPE, OBS_VALUE, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, DATA_SOURCE, OBS_COMMENT, DECIMALS)
+  select(FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, DATA_SOURCE, OBS_COMMENT, DECIMALS)
 
 #### ******************************** Norminal gdp processing ***************************************** ####
 
@@ -168,7 +178,7 @@ ngdp_val <- read_excel("../data/rgdp_data.xlsx", sheet = "NGDP_VAL")
 colHeader <- colnames(ngdp_val)[3]
 selection <- ngdp_val |>
   select(id, colHeader) |>
-  rename(INDUSTRY_TYPE = id)
+  rename(INDUSTRY = id)
 
 selection$TIME_PERIOD <- colHeader
 colnames(selection)[2] <- "OBS_VALUE"
@@ -178,11 +188,13 @@ ngdpVal <- selection |>
   mutate(FREQ = "A",
          REF_AREA = "FJ",
          INDICATOR = "NMGDP",
+         GDP_BREAKDOWN = "",
          TRANSFORMATION = "",
          UNIT_MEASURE = "FJD",
          UNIT_MULT = 6,
          OBS_STATUS =  ifelse(grepl("r", TIME_PERIOD), "R",
                               ifelse(grepl("p", TIME_PERIOD), "P", "")),
+         BASE_PER = "",
          DATA_SOURCE = "",
          OBS_COMMENT = "",
          DECIMALS = 1,
@@ -204,17 +216,19 @@ while (index <= total_columns){
     mutate(FREQ = "A",
            REF_AREA = "FJ",
            INDICATOR = "NMGDP",
+           GDP_BREAKDOWN = "",
            TRANSFORMATION = "",
            UNIT_MEASURE = "FJD",
            UNIT_MULT = 6,
            OBS_STATUS = ifelse(grepl("r", TIME_PERIOD), "R",
                                ifelse(grepl("p", TIME_PERIOD), "P", "")),
+           BASE_PER = "",
            DATA_SOURCE = "",
            OBS_COMMENT = "",
            DECIMALS = 1,
            TIME_PERIOD = substr(TIME_PERIOD, 1, 4)
     ) |>
-    rename(INDUSTRY_TYPE = id)
+    rename(INDUSTRY = id)
   
   ngdpVal <- rbind(ngdpVal, nextData)
   index <- index + 1
@@ -227,7 +241,7 @@ ngdp_per <- read_excel("../data/rgdp_data.xlsx", sheet = "NGDP_PER")
 colHeader <- colnames(ngdp_per)[3]
 selection <- ngdp_per |>
   select(id, colHeader) |>
-  rename(INDUSTRY_TYPE = id)
+  rename(INDUSTRY = id)
 
 selection$TIME_PERIOD <- colHeader
 colnames(selection)[2] <- "OBS_VALUE"
@@ -237,11 +251,13 @@ ngdpPercent <- selection |>
   mutate(FREQ = "A",
          REF_AREA = "FJ",
          INDICATOR = "NMGDP",
+         GDP_BREAKDOWN = "",
          TRANSFORMATION = "YM1",
          UNIT_MEASURE = "PERCENT",
          UNIT_MULT = "",
          OBS_STATUS =  ifelse(grepl("r", TIME_PERIOD), "R",
                               ifelse(grepl("p", TIME_PERIOD), "P", "")),
+         BASE_PER = "",
          DATA_SOURCE = "",
          OBS_COMMENT = "",
          DECIMALS = 1,
@@ -264,17 +280,19 @@ while (index <= total_columns){
     mutate(FREQ = "A",
            REF_AREA = "FJ",
            INDICATOR = "NMGDP",
+           GDP_BREAKDOWN = "",
            TRANSFORMATION = "YM1",
            UNIT_MEASURE = "PERCENT",
            UNIT_MULT = "",
            OBS_STATUS = ifelse(grepl("r", TIME_PERIOD), "R",
                                ifelse(grepl("p", TIME_PERIOD), "P", "")),
+           BASE_PER = "",
            DATA_SOURCE = "",
            OBS_COMMENT = "",
            DECIMALS = 1,
            TIME_PERIOD = substr(TIME_PERIOD, 1, 4)
     ) |>
-    rename(INDUSTRY_TYPE = id)
+    rename(INDUSTRY = id)
   
   ngdpPercent <- rbind(ngdpPercent, nextData)
   index <- index + 1
@@ -285,7 +303,7 @@ while (index <= total_columns){
 combine_nominal_gdp <- rbind(ngdpVal, ngdpPercent)
 
 combine_nominal_gdp <- combine_nominal_gdp |>
-  select(FREQ, TIME_PERIOD, REF_AREA, INDICATOR, TRANSFORMATION, INDUSTRY_TYPE, OBS_VALUE, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, DATA_SOURCE, OBS_COMMENT, DECIMALS)
+  select(FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, DATA_SOURCE, OBS_COMMENT, DECIMALS)
 
 
 #Combining both the real and nominal gdp
@@ -302,7 +320,7 @@ rgdp_cnt <- read_excel("../data/rgdp_data.xlsx", sheet = "RGDP_CNT")
 colHeader <- colnames(rgdp_cnt)[3]
 selection <- rgdp_cnt |>
   select(id, colHeader) |>
-  rename(INDUSTRY_TYPE = id)
+  rename(INDUSTRY = id)
 
 selection$TIME_PERIOD <- colHeader
 colnames(selection)[2] <- "OBS_VALUE"
@@ -312,11 +330,13 @@ rgdpContribution <- selection |>
   mutate(FREQ = "A",
          REF_AREA = "FJ",
          INDICATOR = "NMGDPCNT",
+         GDP_BREAKDOWN = "",
          TRANSFORMATION = "",
          UNIT_MEASURE = "PERCENT",
          UNIT_MULT = "",
          OBS_STATUS =  ifelse(grepl("r", TIME_PERIOD), "R",
                               ifelse(grepl("p", TIME_PERIOD), "P", "")),
+         BASE_PER = "",
          DATA_SOURCE = "",
          OBS_COMMENT = "",
          DECIMALS = 1,
@@ -338,17 +358,19 @@ while (index <= total_columns){
     mutate(FREQ = "A",
            REF_AREA = "FJ",
            INDICATOR = "RLGDPCNT",
+           GDP_BREAKDOWN = "",
            TRANSFORMATION = "",
            UNIT_MEASURE = "PERCENT",
            UNIT_MULT = "",
            OBS_STATUS = ifelse(grepl("r", TIME_PERIOD), "R",
                                ifelse(grepl("p", TIME_PERIOD), "P", "")),
+           BASE_PER = "",
            DATA_SOURCE = "",
            OBS_COMMENT = "",
            DECIMALS = 1,
            TIME_PERIOD = substr(TIME_PERIOD, 1, 4)
     ) |>
-    rename(INDUSTRY_TYPE = id)
+    rename(INDUSTRY = id)
   
   rgdpContribution <- rbind(rgdpContribution, nextData)
   index <- index + 1
@@ -356,7 +378,7 @@ while (index <= total_columns){
 
 #Combing the nominal gdp and gdp percent change
 rgdpContribution <- rgdpContribution |>
-  select(FREQ, TIME_PERIOD, REF_AREA, INDICATOR, TRANSFORMATION, INDUSTRY_TYPE, OBS_VALUE, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, DATA_SOURCE, OBS_COMMENT, DECIMALS)
+  select(FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, DATA_SOURCE, OBS_COMMENT, DECIMALS)
 
 
 
