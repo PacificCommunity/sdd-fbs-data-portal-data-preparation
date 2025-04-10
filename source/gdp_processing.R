@@ -16,7 +16,7 @@ rgdpWeight_DT <- rgdpWeight |>
   mutate(FREQ = "A",
          TIME_PERIOD = "_T",
          REF_AREA = "FJ",
-         INDICATOR = "NRWGT",
+         INDICATOR = "NMWGT",
          TRANSFORMATION = "_T",
          UNIT_MEASURE = "",
          UNIT_MULT  ="",
@@ -177,7 +177,7 @@ colnames(selection)[2] <- "OBS_VALUE"
 ngdpVal <- selection |>
   mutate(FREQ = "A",
          REF_AREA = "FJ",
-         INDICATOR = "NRGDP",
+         INDICATOR = "NMGDP",
          TRANSFORMATION = "",
          UNIT_MEASURE = "FJD",
          UNIT_MULT = 6,
@@ -203,7 +203,7 @@ while (index <= total_columns){
   nextData <- nextData |>
     mutate(FREQ = "A",
            REF_AREA = "FJ",
-           INDICATOR = "NRGDP",
+           INDICATOR = "NMGDP",
            TRANSFORMATION = "",
            UNIT_MEASURE = "FJD",
            UNIT_MULT = 6,
@@ -236,7 +236,7 @@ colnames(selection)[2] <- "OBS_VALUE"
 ngdpPercent <- selection |>
   mutate(FREQ = "A",
          REF_AREA = "FJ",
-         INDICATOR = "NRGDP",
+         INDICATOR = "NMGDP",
          TRANSFORMATION = "YM1",
          UNIT_MEASURE = "PERCENT",
          UNIT_MULT = "",
@@ -263,7 +263,7 @@ while (index <= total_columns){
   nextData <- nextData |>
     mutate(FREQ = "A",
            REF_AREA = "FJ",
-           INDICATOR = "NRGDP",
+           INDICATOR = "NMGDP",
            TRANSFORMATION = "YM1",
            UNIT_MEASURE = "PERCENT",
            UNIT_MULT = "",
@@ -311,7 +311,7 @@ colnames(selection)[2] <- "OBS_VALUE"
 rgdpContribution <- selection |>
   mutate(FREQ = "A",
          REF_AREA = "FJ",
-         INDICATOR = "NRGDPCNT",
+         INDICATOR = "NMGDPCNT",
          TRANSFORMATION = "",
          UNIT_MEASURE = "PERCENT",
          UNIT_MULT = "",
