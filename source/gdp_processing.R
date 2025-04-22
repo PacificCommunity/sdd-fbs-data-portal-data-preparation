@@ -541,3 +541,181 @@ while (index <= total_columns){
 gdp_market_non_market <- rbind(gdpMarket, gdpMarket_per)
 
 write.csv(gdp_market_non_market, "../output/na/GDP_MARKET_NON_MARKET.csv", row.names = FALSE)
+
+
+#### ************************** GDP formal and informal contribution ***************************************** ####
+
+gdp_formal_informal <- read_excel("../data/rgdp_data.xlsx", sheet = "GDP_FORMAL_INFORMAL")
+
+colHeader <- colnames(gdp_formal_informal)[3]
+selection <- gdp_formal_informal |>
+  select(id, colHeader, label) |>
+  rename(INDUSTRY = id)
+
+selection$TIME_PERIOD <- colHeader
+colnames(selection)[2] <- "OBS_VALUE"
+
+#Get first record
+gdp_formal_informal_DT <- selection |>
+  mutate(FREQ = "A",
+         REF_AREA = "FJ",
+         INDICATOR = ifelse(TIME_PERIOD =="Bweight", "WGT", 
+                            ifelse(INDUSTRY == "RGDP", "RGDP", 
+                                   ifelse(INDUSTRY == "NTAX", "RTAX", 
+                                          ifelse(INDUSTRY == "NME", "NME", "CRGDP")))),
+         GDP_BREAKDOWN = ifelse(label == "Formal", "FOR",
+                                ifelse(label == "Informal", "INF", 
+                                       ifelse(label=="Subsistence", "SUB",
+                                              ifelse(label =="Owner Occupied Dwellings", "OOD",
+                                                     ifelse(label=="Activities of private households as employers of domestic staff", "PAS", 
+                                                            ifelse(label == "Of which non-monetary economy", "NME",  "_T")))))), 
+         
+         TRANSFORMATION = "N",
+         UNIT_MEASURE = ifelse(TIME_PERIOD == "Bweight", "PERCENT", "FJD"),
+         UNIT_MULT = 6,
+         OBS_STATUS =  ifelse(grepl("r", TIME_PERIOD), "R",
+                              ifelse(grepl("p", TIME_PERIOD), "P", "")),
+         BASE_PER = "",
+         OBS_COMMENT = "",
+         DECIMALS = 1,
+         TIME_PERIOD = ifelse(TIME_PERIOD == "Bweight", "_T", substr(TIME_PERIOD, 1, 4)),
+         INDUSTRY = ifelse()
+  ) |>
+  select(-label)
+
+
+index = 4
+total_columns <- ncol(gdp_market)
+
+#Loop to get the other columns
+
+while (index <= total_columns){
+  ncolHead <- colnames(gdp_formal_informal)[index]
+  nextData <- gdp_formal_informal |> select(id, ncolHead, label)
+  nextData$TIME_PERIOD <- ncolHead
+  colnames(nextData)[2] <- "OBS_VALUE"
+  nextData$OBS_VALUE <- as.numeric(nextData$OBS_VALUE)
+  nextData <- nextData |>
+    rename(INDUSTRY = id) |>
+    mutate(FREQ = "A",
+           REF_AREA = "FJ",
+           INDICATOR = ifelse(TIME_PERIOD =="Bweight", "WGT", 
+                              ifelse(INDUSTRY == "RGDP", "RGDP", 
+                                     ifelse(INDUSTRY == "NTAX", "RTAX", 
+                                            ifelse(INDUSTRY == "NME", "NME", "CRGDP")))),
+           GDP_BREAKDOWN = ifelse(label == "Formal", "FOR",
+                                  ifelse(label == "Informal", "INF", 
+                                         ifelse(label=="Subsistence", "SUB",
+                                                ifelse(label =="Owner Occupied Dwellings", "OOD",
+                                                       ifelse(label=="Activities of private households as employers of domestic staff", "PAS", 
+                                                              ifelse(label == "Of which non-monetary economy", "NME",  "_T")))))),
+           TRANSFORMATION = "N",
+           UNIT_MEASURE = ifelse(TIME_PERIOD == "Bweight", "PERCENT", "FJD"),
+           UNIT_MULT = 6,
+           OBS_STATUS = ifelse(grepl("r", TIME_PERIOD), "R",
+                               ifelse(grepl("p", TIME_PERIOD), "P", "")),
+           BASE_PER = "",
+           OBS_COMMENT = "",
+           DECIMALS = 1,
+           TIME_PERIOD = ifelse(TIME_PERIOD == "Bweight", "_T", substr(TIME_PERIOD, 1, 4))
+    ) |>
+    select(-label)
+  
+  
+  gdp_formal_informal_DT <- rbind(gdp_formal_informal_DT, nextData)
+  index <- index + 1
+}
+
+
+#Combing the nominal gdp and gdp percent change
+gdp_formal_informal_DT <- gdp_formal_informal_DT |>
+  select(FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
+
+
+#### ************************** GDP formal and informal contribution percentages ***************************************** ####
+
+gdp_formal_informal_per <- read_excel("../data/rgdp_data.xlsx", sheet = "GDP_FORMAL_INFORMAL_PER")
+
+colHeader <- colnames(gdp_formal_informal_per)[3]
+selection <- gdp_formal_informal_per |>
+  select(id, colHeader, label) |>
+  rename(INDUSTRY = id)
+
+selection$TIME_PERIOD <- colHeader
+colnames(selection)[2] <- "OBS_VALUE"
+
+#Get first record
+gdp_formal_informal_per_DT <- selection |>
+  mutate(FREQ = "A",
+         REF_AREA = "FJ",
+         INDICATOR = ifelse(TIME_PERIOD =="Bweight", "WGT", 
+                            ifelse(INDUSTRY == "RGDP", "RGDP", 
+                                   ifelse(INDUSTRY == "NTAX", "RTAX", 
+                                          ifelse(INDUSTRY == "NME", "NME", "CRGDP")))),
+         GDP_BREAKDOWN = ifelse(label == "Formal", "FOR",
+                                ifelse(label == "Informal", "INF", 
+                                       ifelse(label=="Subsistence", "SUB",
+                                              ifelse(label =="Owner Occupied Dwellings", "OOD",
+                                                     ifelse(label=="Activities of private households as employers of domestic staff", "PAS", 
+                                                            ifelse(label == "Of which non-monetary economy", "NME",  "_T")))))), 
+         
+         TRANSFORMATION = "G1Y",
+         UNIT_MEASURE = "PERCENT",
+         UNIT_MULT = 6,
+         OBS_STATUS =  ifelse(grepl("r", TIME_PERIOD), "R",
+                              ifelse(grepl("p", TIME_PERIOD), "P", "")),
+         BASE_PER = "",
+         OBS_COMMENT = "",
+         DECIMALS = 1,
+         TIME_PERIOD = ifelse(TIME_PERIOD == "Bweight", "_T", substr(TIME_PERIOD, 1, 4))
+  ) |>
+  select(-label)
+
+
+index = 4
+total_columns <- ncol(gdp_market)
+
+#Loop to get the other columns
+
+while (index <= total_columns){
+  ncolHead <- colnames(gdp_formal_informal_per)[index]
+  nextData <- gdp_formal_informal_per |> select(id, ncolHead, label)
+  nextData$TIME_PERIOD <- ncolHead
+  colnames(nextData)[2] <- "OBS_VALUE"
+  nextData$OBS_VALUE <- as.numeric(nextData$OBS_VALUE)
+  nextData <- nextData |>
+    rename(INDUSTRY = id) |>
+    mutate(FREQ = "A",
+           REF_AREA = "FJ",
+           INDICATOR = ifelse(TIME_PERIOD =="Bweight", "WGT", 
+                              ifelse(INDUSTRY == "RGDP", "RGDP", 
+                                     ifelse(INDUSTRY == "NTAX", "RTAX", 
+                                            ifelse(INDUSTRY == "NME", "NME", "CRGDP")))),
+           GDP_BREAKDOWN = ifelse(label == "Formal", "FOR",
+                                  ifelse(label == "Informal", "INF", 
+                                         ifelse(label=="Subsistence", "SUB",
+                                                ifelse(label =="Owner Occupied Dwellings", "OOD",
+                                                       ifelse(label=="Activities of private households as employers of domestic staff", "PAS", 
+                                                              ifelse(label == "Of which non-monetary economy", "NME",  "_T")))))),
+           TRANSFORMATION = "G1Y",
+           UNIT_MEASURE = ifelse(TIME_PERIOD == "Bweight", "PERCENT", "FJD"),
+           UNIT_MULT = 6,
+           OBS_STATUS = ifelse(grepl("r", TIME_PERIOD), "R",
+                               ifelse(grepl("p", TIME_PERIOD), "P", "")),
+           BASE_PER = "",
+           OBS_COMMENT = "",
+           DECIMALS = 1,
+           TIME_PERIOD = ifelse(TIME_PERIOD == "Bweight", "_T", substr(TIME_PERIOD, 1, 4))
+    ) |>
+    select(-label)
+  
+  
+  gdp_formal_informal_per_DT <- rbind(gdp_formal_informal_per_DT, nextData)
+  index <- index + 1
+}
+
+
+#Combing the nominal gdp and gdp percent change
+gdp_formal_informal_per_DT <- gdp_formal_informal_per_DT |>
+  select(FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
+
