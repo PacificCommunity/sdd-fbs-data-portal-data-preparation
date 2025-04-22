@@ -579,13 +579,13 @@ gdp_formal_informal_DT <- selection |>
          OBS_COMMENT = "",
          DECIMALS = 1,
          TIME_PERIOD = ifelse(TIME_PERIOD == "Bweight", "_T", substr(TIME_PERIOD, 1, 4)),
-         INDUSTRY = ifelse()
+         INDUSTRY = ifelse(nchar(INDUSTRY) > 2, "_T", INDUSTRY)
   ) |>
   select(-label)
 
 
 index = 4
-total_columns <- ncol(gdp_market)
+total_columns <- ncol(gdp_formal_informal)
 
 #Loop to get the other columns
 
@@ -617,7 +617,8 @@ while (index <= total_columns){
            BASE_PER = "",
            OBS_COMMENT = "",
            DECIMALS = 1,
-           TIME_PERIOD = ifelse(TIME_PERIOD == "Bweight", "_T", substr(TIME_PERIOD, 1, 4))
+           TIME_PERIOD = ifelse(TIME_PERIOD == "Bweight", "_T", substr(TIME_PERIOD, 1, 4)),
+           INDUSTRY = ifelse(nchar(INDUSTRY) > 2, "_T", INDUSTRY)
     ) |>
     select(-label)
   
@@ -667,13 +668,14 @@ gdp_formal_informal_per_DT <- selection |>
          BASE_PER = "",
          OBS_COMMENT = "",
          DECIMALS = 1,
-         TIME_PERIOD = ifelse(TIME_PERIOD == "Bweight", "_T", substr(TIME_PERIOD, 1, 4))
+         TIME_PERIOD = ifelse(TIME_PERIOD == "Bweight", "_T", substr(TIME_PERIOD, 1, 4)),
+         INDUSTRY = ifelse(nchar(INDUSTRY) > 2, "_T", INDUSTRY)
   ) |>
   select(-label)
 
 
 index = 4
-total_columns <- ncol(gdp_market)
+total_columns <- ncol(gdp_formal_informal_per)
 
 #Loop to get the other columns
 
@@ -705,7 +707,8 @@ while (index <= total_columns){
            BASE_PER = "",
            OBS_COMMENT = "",
            DECIMALS = 1,
-           TIME_PERIOD = ifelse(TIME_PERIOD == "Bweight", "_T", substr(TIME_PERIOD, 1, 4))
+           TIME_PERIOD = ifelse(TIME_PERIOD == "Bweight", "_T", substr(TIME_PERIOD, 1, 4)),
+           INDUSTRY = ifelse(nchar(INDUSTRY) > 2, "_T", INDUSTRY)
     ) |>
     select(-label)
   
@@ -718,4 +721,21 @@ while (index <= total_columns){
 #Combing the nominal gdp and gdp percent change
 gdp_formal_informal_per_DT <- gdp_formal_informal_per_DT |>
   select(FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
+
+#Combine the two dataframes together
+
+gdp_formal_informal_combine <- rbind(gdp_formal_informal_DT, gdp_formal_informal_per_DT)
+
+#Write the final datafram to the csv ouput file
+
+write.csv(gdp_formal_informal_combine, "../output/na/GDP_FORMAL_INFORMAL.csv", row.names = FALSE)
+
+
+
+
+
+
+
+
+
 
