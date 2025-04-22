@@ -730,12 +730,3 @@ gdp_formal_informal_combine <- rbind(gdp_formal_informal_DT, gdp_formal_informal
 
 write.csv(gdp_formal_informal_combine, "../output/na/GDP_FORMAL_INFORMAL.csv", row.names = FALSE)
 
-
-
-
-
-
-
-
-
-
