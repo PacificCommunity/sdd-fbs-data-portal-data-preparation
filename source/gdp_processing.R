@@ -174,7 +174,7 @@ realGDP_combine <- realGDP_combine |>
   select(FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, DATA_SOURCE, OBS_COMMENT, DECIMALS)
 
 #Write the real gdp table to the output folder
-write.csv(realGDP_combine, "../output/na/GDP_REAL.csv", row.names = FALSE)
+write.csv(realGDP_combine, "../output/na/2_GDP_REAL_BY_INDUSTRY.csv.csv", row.names = FALSE)
 
 
 
@@ -313,7 +313,7 @@ combine_nominal_gdp <- combine_nominal_gdp |>
   select(FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, DATA_SOURCE, OBS_COMMENT, DECIMALS)
 
 #Write the final file to the output folder
-write.csv(combine_nominal_gdp, "../output/na/GDP_NOMINAL.csv", row.names = FALSE)
+write.csv(combine_nominal_gdp, "../output/na/1_GDP_NOMINAL_BY_INDUSTRY.csv", row.names = FALSE)
 
 #### ***************************** Real GDP Contribution ******************************************** ####
 
@@ -383,7 +383,7 @@ rgdpContribution <- rgdpContribution |>
   select(FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, DATA_SOURCE, OBS_COMMENT, DECIMALS)
 
 #Write gdp contribution to the output folder
-write.csv(rgdpContribution, "../output/na/GDP_CONTRIBUTION.csv", row.names = FALSE)
+write.csv(rgdpContribution, "../output/na/3_GDP_CONTRIBUTION.csv", row.names = FALSE)
 
 #### ************************** GDP market and non market contribution ***************************************** ####
 
@@ -540,7 +540,7 @@ while (index <= total_columns){
 #Write gdp contribution to the output folder
 gdp_market_non_market <- rbind(gdpMarket, gdpMarket_per)
 
-write.csv(gdp_market_non_market, "../output/na/GDP_MARKET_NON_MARKET.csv", row.names = FALSE)
+write.csv(gdp_market_non_market, "../output/na/4_GDP_MARKET_NON_MARKET.csv", row.names = FALSE)
 
 
 #### ************************** GDP formal and informal contribution ***************************************** ####
@@ -728,7 +728,7 @@ gdp_formal_informal_combine <- rbind(gdp_formal_informal_DT, gdp_formal_informal
 
 #Write the final datafram to the csv ouput file
 
-write.csv(gdp_formal_informal_combine, "../output/na/GDP_FORMAL_INFORMAL.csv", row.names = FALSE)
+write.csv(gdp_formal_informal_combine, "../output/na/5_GDP_FORMAL_INFORMAL.csv", row.names = FALSE)
 
 
 #### ************************** GDP Nominal cross output ***************************************** ####
@@ -910,6 +910,187 @@ nominal_gross_intermediate <- nominal_gross_intermediate |>
 
 #write the final datframe to the output csv file
 
-write.csv(nominal_gross_intermediate, "../output/na/NOMINAL_GROSS_OUTPUT_INTERMEDIATE_COST.csv", row.names = FALSE)
+write.csv(nominal_gross_intermediate, "../output/na/6_NOMINAL_GROSS_OUTPUT_INTERMEDIATE_COST.csv", row.names = FALSE)
 
+
+#### ************************** GDP Real cross output ***************************************** ####
+
+real_gdp_gross_output <- read_excel("../data/rgdp_data.xlsx", sheet = "REAL_GROSS_OUTPUT")
+
+colHeader <- colnames(real_gdp_gross_output)[3]
+selection <- real_gdp_gross_output |>
+  select(id, colHeader, label) |>
+  rename(INDUSTRY = id)
+
+selection$TIME_PERIOD <- colHeader
+colnames(selection)[2] <- "OBS_VALUE"
+
+#Get first record
+real_gdp_gross_output_DT <- selection |>
+  mutate(FREQ = "A",
+         REF_AREA = "FJ",
+         INDICATOR = ifelse(TIME_PERIOD =="Bweight", "WGT", 
+                            ifelse(INDUSTRY == "RGDP", "RGDP", 
+                                   ifelse(INDUSTRY == "NTAX", "RTAX", 
+                                          ifelse(INDUSTRY == "NME", "NME", "CRGDP")))),
+         GDP_BREAKDOWN = ifelse(label == "Formal", "FOR",
+                                ifelse(label == "Informal", "INF", 
+                                       ifelse(label=="Subsistence", "SUB",
+                                              ifelse(label =="Owner Occupied Dwellings", "OOD",
+                                                     ifelse(label=="Activities of private households as employers of domestic staff", "PAS", 
+                                                            ifelse(label == "Of which non-monetary economy", "NME",  "_T")))))), 
+         
+         TRANSFORMATION = "N",
+         UNIT_MEASURE = ifelse(TIME_PERIOD == "Bweight", "PERCENT", "FJD"),
+         UNIT_MULT = 6,
+         OBS_STATUS =  ifelse(grepl("r", TIME_PERIOD), "R",
+                              ifelse(grepl("p", TIME_PERIOD), "P", "")),
+         BASE_PER = "",
+         OBS_COMMENT = "",
+         DECIMALS = 1,
+         TIME_PERIOD = ifelse(TIME_PERIOD == "Bweight", "_T", substr(TIME_PERIOD, 1, 4)),
+         INDUSTRY = ifelse(nchar(INDUSTRY) > 2, "_T", INDUSTRY)
+  ) |>
+  select(-label)
+
+
+index = 4
+total_columns <- ncol(real_gdp_gross_output)
+
+#Loop to get the other columns
+
+while (index <= total_columns){
+  ncolHead <- colnames(real_gdp_gross_output)[index]
+  nextData <- real_gdp_gross_output |> select(id, ncolHead, label)
+  nextData$TIME_PERIOD <- ncolHead
+  colnames(nextData)[2] <- "OBS_VALUE"
+  nextData$OBS_VALUE <- as.numeric(nextData$OBS_VALUE)
+  nextData <- nextData |>
+    rename(INDUSTRY = id) |>
+    mutate(FREQ = "A",
+           REF_AREA = "FJ",
+           INDICATOR = ifelse(TIME_PERIOD =="Bweight", "WGT", 
+                              ifelse(INDUSTRY == "RGDP", "RGDP", 
+                                     ifelse(INDUSTRY == "NTAX", "RTAX", 
+                                            ifelse(INDUSTRY == "NME", "NME", "CRGDP")))),
+           GDP_BREAKDOWN = ifelse(label == "Formal", "FOR",
+                                  ifelse(label == "Informal", "INF", 
+                                         ifelse(label=="Subsistence", "SUB",
+                                                ifelse(label =="Owner Occupied Dwellings", "OOD",
+                                                       ifelse(label=="Activities of private households as employers of domestic staff", "PAS", 
+                                                              ifelse(label == "Of which non-monetary economy", "NME",  "_T")))))),
+           TRANSFORMATION = "N",
+           UNIT_MEASURE = ifelse(TIME_PERIOD == "Bweight", "PERCENT", "FJD"),
+           UNIT_MULT = 6,
+           OBS_STATUS = ifelse(grepl("r", TIME_PERIOD), "R",
+                               ifelse(grepl("p", TIME_PERIOD), "P", "")),
+           BASE_PER = "",
+           OBS_COMMENT = "",
+           DECIMALS = 1,
+           TIME_PERIOD = ifelse(TIME_PERIOD == "Bweight", "_T", substr(TIME_PERIOD, 1, 4)),
+           INDUSTRY = ifelse(nchar(INDUSTRY) > 2, "_T", INDUSTRY)
+    ) |>
+    select(-label)
+  
+  
+  real_gdp_gross_output_DT <- rbind(real_gdp_gross_output_DT, nextData)
+  index <- index + 1
+}
+
+
+#### ************************** GDP real intermediate cost ***************************************** ####
+
+real_gdp_intermediate_cost <- read_excel("../data/rgdp_data.xlsx", sheet = "REAL_INTERMEDIATE_COST")
+
+colHeader <- colnames(real_gdp_intermediate_cost)[3]
+selection <- real_gdp_intermediate_cost |>
+  select(id, colHeader, label) |>
+  rename(INDUSTRY = id)
+
+selection$TIME_PERIOD <- colHeader
+colnames(selection)[2] <- "OBS_VALUE"
+
+#Get first record
+real_gdp_intermediate_cost_DT <- selection |>
+  mutate(FREQ = "A",
+         REF_AREA = "FJ",
+         INDICATOR = ifelse(TIME_PERIOD =="Bweight", "WGT", 
+                            ifelse(INDUSTRY == "RGDP", "RGDP", 
+                                   ifelse(INDUSTRY == "NTAX", "RTAX", 
+                                          ifelse(INDUSTRY == "NME", "NME", "CRGDP")))),
+         GDP_BREAKDOWN = ifelse(label == "Formal", "FOR",
+                                ifelse(label == "Informal", "INF", 
+                                       ifelse(label=="Subsistence", "SUB",
+                                              ifelse(label =="Owner Occupied Dwellings", "OOD",
+                                                     ifelse(label=="Activities of private households as employers of domestic staff", "PAS", 
+                                                            ifelse(label == "Of which non-monetary economy", "NME",  "_T")))))), 
+         
+         TRANSFORMATION = "N",
+         UNIT_MEASURE = ifelse(TIME_PERIOD == "Bweight", "PERCENT", "FJD"),
+         UNIT_MULT = 6,
+         OBS_STATUS =  ifelse(grepl("r", TIME_PERIOD), "R",
+                              ifelse(grepl("p", TIME_PERIOD), "P", "")),
+         BASE_PER = "",
+         OBS_COMMENT = "",
+         DECIMALS = 1,
+         TIME_PERIOD = ifelse(TIME_PERIOD == "Bweight", "_T", substr(TIME_PERIOD, 1, 4)),
+         INDUSTRY = ifelse(nchar(INDUSTRY) > 2, "_T", INDUSTRY)
+  ) |>
+  select(-label)
+
+
+index = 4
+total_columns <- ncol(real_gdp_intermediate_cost)
+
+#Loop to get the other columns
+
+while (index <= total_columns){
+  ncolHead <- colnames(real_gdp_intermediate_cost)[index]
+  nextData <- real_gdp_intermediate_cost |> select(id, ncolHead, label)
+  nextData$TIME_PERIOD <- ncolHead
+  colnames(nextData)[2] <- "OBS_VALUE"
+  nextData$OBS_VALUE <- as.numeric(nextData$OBS_VALUE)
+  nextData <- nextData |>
+    rename(INDUSTRY = id) |>
+    mutate(FREQ = "A",
+           REF_AREA = "FJ",
+           INDICATOR = ifelse(TIME_PERIOD =="Bweight", "WGT", 
+                              ifelse(INDUSTRY == "RGDP", "RGDP", 
+                                     ifelse(INDUSTRY == "NTAX", "RTAX", 
+                                            ifelse(INDUSTRY == "NME", "NME", "CRGDP")))),
+           GDP_BREAKDOWN = ifelse(label == "Formal", "FOR",
+                                  ifelse(label == "Informal", "INF", 
+                                         ifelse(label=="Subsistence", "SUB",
+                                                ifelse(label =="Owner Occupied Dwellings", "OOD",
+                                                       ifelse(label=="Activities of private households as employers of domestic staff", "PAS", 
+                                                              ifelse(label == "Of which non-monetary economy", "NME",  "_T")))))),
+           TRANSFORMATION = "N",
+           UNIT_MEASURE = ifelse(TIME_PERIOD == "Bweight", "PERCENT", "FJD"),
+           UNIT_MULT = 6,
+           OBS_STATUS = ifelse(grepl("r", TIME_PERIOD), "R",
+                               ifelse(grepl("p", TIME_PERIOD), "P", "")),
+           BASE_PER = "",
+           OBS_COMMENT = "",
+           DECIMALS = 1,
+           TIME_PERIOD = ifelse(TIME_PERIOD == "Bweight", "_T", substr(TIME_PERIOD, 1, 4)),
+           INDUSTRY = ifelse(nchar(INDUSTRY) > 2, "_T", INDUSTRY)
+    ) |>
+    select(-label)
+  
+  
+  real_gdp_intermediate_cost_DT <- rbind(real_gdp_intermediate_cost_DT, nextData)
+  index <- index + 1
+}
+
+#Combine real_gdp_gross_output_DT and real_gdp_intermediate_cost_DT otgether
+
+real_gross_intermediate <- rbind(real_gdp_gross_output_DT, real_gdp_intermediate_cost_DT)
+
+#Reorder the columns
+real_gross_intermediate <- real_gross_intermediate |>
+  select(FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
+
+#write the final datframe to the output csv file
+
+write.csv(real_gross_intermediate, "../output/na/7_REAL_GROSS_OUTPUT_INTERMEDIATE_COST.csv", row.names = FALSE)
 
