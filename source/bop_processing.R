@@ -17,9 +17,9 @@ tab1_bop <- read_excel("../data/bop_data.xlsx", sheet = "tab1_BOP")
 tab1_bop_bopAcc <- merge(tab1_bop, bopAcc, by = "label")
 
 
-colHeader <- colnames(tab1_bop_bopAcc)[2]
+colHeader <- colnames(tab1_bop_bopAcc)[3]
 selection <- tab1_bop_bopAcc |>
-  select(Id, colHeader) |>
+  select(Id, colHeader, order) |>
   rename(ACCOUNT = Id)
 
 selection$TIME_PERIOD <- colHeader
@@ -28,6 +28,7 @@ colnames(selection)[2] <- "OBS_VALUE"
 #Process first record
 
 tab1_bop_DT <- selection |>
+  arrange(order) |>
   mutate(FREQ = ifelse(nchar(TIME_PERIOD)==4, "A", "Q"),
          REF_AREA = "FJ",
          INDICATOR = "AMT",
@@ -37,17 +38,19 @@ tab1_bop_DT <- selection |>
          OBS_COMMENT = "",   
          DECIMALS = 1
          
-         )
+         ) |>
+  select(-order)
 
-index = 3
+index = 4
 total_columns <- ncol(tab1_bop_bopAcc)
 
 while (index <= total_columns){
   ncolHead <- colnames(tab1_bop_bopAcc)[index]
-  nextData <- tab1_bop_bopAcc |> select(Id, ncolHead) |> rename(ACCOUNT = Id)
+  nextData <- tab1_bop_bopAcc |> select(Id, ncolHead, order) |> rename(ACCOUNT = Id)
   nextData$TIME_PERIOD <- ncolHead
   colnames(nextData)[2] <- "OBS_VALUE"
   nextData <- nextData |>
+    arrange(order) |>
     mutate(FREQ = ifelse(nchar(TIME_PERIOD)==4, "A", "Q"),
            REF_AREA = "FJ",
            INDICATOR = "AMT",
@@ -57,8 +60,10 @@ while (index <= total_columns){
                                ifelse(grepl("p", TIME_PERIOD), "P", "")),
            OBS_COMMENT = "",
            DECIMALS = 1,
-           #TIME_PERIOD = substr(TIME_PERIOD, 1, 4)
-    )
+           TIME_PERIOD = gsub("\\s*\\[(r|p)\\]", "", TIME_PERIOD)
+    ) |>
+    select(-order)
+    
   
   tab1_bop_DT <- rbind(tab1_bop_DT, nextData)
   index <- index + 1
@@ -80,9 +85,9 @@ tab2_bop <- read_excel("../data/bop_data.xlsx", sheet = "tab2_BOP")
 #merge with the bopAcc to get the account codes
 tab2_bop_bopAcc <- merge(tab2_bop, bopAcc, by = "label")
 
-colHeader <- colnames(tab2_bop_bopAcc)[2]
+colHeader <- colnames(tab2_bop_bopAcc)[3]
 selection <- tab2_bop_bopAcc |>
-  select(Id, colHeader) |>
+  select(Id, colHeader, order) |>
   rename(ACCOUNT = Id)
 
 selection$TIME_PERIOD <- colHeader
@@ -91,6 +96,7 @@ colnames(selection)[2] <- "OBS_VALUE"
 #Process first record
 
 tab2_bop_DT <- selection |>
+  arrange(order) |>
   mutate(FREQ = ifelse(nchar(TIME_PERIOD)==4, "A", "Q"),
          REF_AREA = "FJ",
          INDICATOR = "AMT",
@@ -100,17 +106,19 @@ tab2_bop_DT <- selection |>
          OBS_COMMENT = "",   
          DECIMALS = 1
          
-  )
+  ) |>
+  select(-order)
 
-index = 3
+index = 4
 total_columns <- ncol(tab2_bop_bopAcc)
 
 while (index <= total_columns){
   ncolHead <- colnames(tab2_bop_bopAcc)[index]
-  nextData <- tab2_bop_bopAcc |> select(Id, ncolHead) |> rename(ACCOUNT = Id)
+  nextData <- tab2_bop_bopAcc |> select(Id, ncolHead, order) |> rename(ACCOUNT = Id)
   nextData$TIME_PERIOD <- ncolHead
   colnames(nextData)[2] <- "OBS_VALUE"
   nextData <- nextData |>
+    arrange(order) |>
     mutate(FREQ = ifelse(nchar(TIME_PERIOD)==4, "A", "Q"),
            REF_AREA = "FJ",
            INDICATOR = "AMT",
@@ -120,8 +128,9 @@ while (index <= total_columns){
                                ifelse(grepl("p", TIME_PERIOD), "P", "")),
            OBS_COMMENT = "",
            DECIMALS = 1,
-           #TIME_PERIOD = substr(TIME_PERIOD, 1, 4)
-    )
+           TIME_PERIOD = gsub("\\s*\\[(r|p)\\]", "", TIME_PERIOD)
+    ) |>
+    select(-order)
   
   tab2_bop_DT <- rbind(tab2_bop_DT, nextData)
   index <- index + 1
@@ -143,9 +152,9 @@ tab3_bop <- read_excel("../data/bop_data.xlsx", sheet = "tab3_BOP")
 #merge with the bopAcc to get the account codes
 tab3_bop_bopAcc <- merge(tab3_bop, bopAcc, by = "label")
 
-colHeader <- colnames(tab3_bop_bopAcc)[2]
+colHeader <- colnames(tab3_bop_bopAcc)[3]
 selection <- tab3_bop_bopAcc |>
-  select(Id, colHeader) |>
+  select(Id, colHeader, order) |>
   rename(ACCOUNT = Id)
 
 selection$TIME_PERIOD <- colHeader
@@ -154,6 +163,7 @@ colnames(selection)[2] <- "OBS_VALUE"
 #Process first record
 
 tab3_bop_DT <- selection |>
+  arrange(order) |>
   mutate(FREQ = ifelse(nchar(TIME_PERIOD)==4, "A", "Q"),
          REF_AREA = "FJ",
          INDICATOR = "AMT",
@@ -163,17 +173,19 @@ tab3_bop_DT <- selection |>
          OBS_COMMENT = "",   
          DECIMALS = 1
          
-  )
+  ) |>
+  select(-order)
 
-index = 3
+index = 4
 total_columns <- ncol(tab3_bop_bopAcc)
 
 while (index <= total_columns){
   ncolHead <- colnames(tab3_bop_bopAcc)[index]
-  nextData <- tab3_bop_bopAcc |> select(Id, ncolHead) |> rename(ACCOUNT = Id)
+  nextData <- tab3_bop_bopAcc |> select(Id, ncolHead, order) |> rename(ACCOUNT = Id)
   nextData$TIME_PERIOD <- ncolHead
   colnames(nextData)[2] <- "OBS_VALUE"
   nextData <- nextData |>
+    arrange(order) |>
     mutate(FREQ = ifelse(nchar(TIME_PERIOD)==4, "A", "Q"),
            REF_AREA = "FJ",
            INDICATOR = "AMT",
@@ -183,8 +195,9 @@ while (index <= total_columns){
                                ifelse(grepl("p", TIME_PERIOD), "P", "")),
            OBS_COMMENT = "",
            DECIMALS = 1,
-           #TIME_PERIOD = substr(TIME_PERIOD, 1, 4)
-    )
+           TIME_PERIOD = gsub("\\s*\\[(r|p)\\]", "", TIME_PERIOD)
+    ) |>
+    select(-order)
   
   tab3_bop_DT <- rbind(tab3_bop_DT, nextData)
   index <- index + 1
@@ -207,9 +220,9 @@ tab4_bop <- read_excel("../data/bop_data.xlsx", sheet = "tab4_BOP")
 tab4_bop_bopAcc <- merge(tab4_bop, bopAcc, by = "label")
 tab4_bop_bopAcc <- tab4_bop_bopAcc[!grepl("^C", tab4_bop_bopAcc$Id), ]
 
-colHeader <- colnames(tab4_bop_bopAcc)[2]
+colHeader <- colnames(tab4_bop_bopAcc)[3]
 selection <- tab4_bop_bopAcc |>
-  select(Id, colHeader) |>
+  select(Id, colHeader, order) |>
   rename(ACCOUNT = Id)
 
 selection$TIME_PERIOD <- colHeader
@@ -218,6 +231,7 @@ colnames(selection)[2] <- "OBS_VALUE"
 #Process first record
 
 tab4_bop_DT <- selection |>
+  arrange(order) |>
   mutate(FREQ = ifelse(nchar(TIME_PERIOD)==4, "A", "Q"),
          REF_AREA = "FJ",
          INDICATOR = "AMT",
@@ -227,17 +241,19 @@ tab4_bop_DT <- selection |>
          OBS_COMMENT = "",   
          DECIMALS = 1
          
-  )
+  ) |>
+  select(-order)
 
-index = 3
+index = 4
 total_columns <- ncol(tab4_bop_bopAcc)
 
 while (index <= total_columns){
   ncolHead <- colnames(tab4_bop_bopAcc)[index]
-  nextData <- tab4_bop_bopAcc |> select(Id, ncolHead) |> rename(ACCOUNT = Id)
+  nextData <- tab4_bop_bopAcc |> select(Id, ncolHead, order) |> rename(ACCOUNT = Id)
   nextData$TIME_PERIOD <- ncolHead
   colnames(nextData)[2] <- "OBS_VALUE"
   nextData <- nextData |>
+    arrange(order) |>
     mutate(FREQ = ifelse(nchar(TIME_PERIOD)==4, "A", "Q"),
            REF_AREA = "FJ",
            INDICATOR = "AMT",
@@ -247,8 +263,9 @@ while (index <= total_columns){
                                ifelse(grepl("p", TIME_PERIOD), "P", "")),
            OBS_COMMENT = "",
            DECIMALS = 1,
-           #TIME_PERIOD = substr(TIME_PERIOD, 1, 4)
-    )
+           TIME_PERIOD = gsub("\\s*\\[(r|p)\\]", "", TIME_PERIOD)
+    ) |>
+    select(-order)
   
   tab4_bop_DT <- rbind(tab4_bop_DT, nextData)
   index <- index + 1
@@ -270,9 +287,9 @@ tab5_bop <- read_excel("../data/bop_data.xlsx", sheet = "tab5_BOP")
 #merge with the bopAcc to get the account codes
 tab5_bop_bopAcc <- merge(tab5_bop, bopAcc, by = "label")
 
-colHeader <- colnames(tab5_bop_bopAcc)[2]
+colHeader <- colnames(tab5_bop_bopAcc)[3]
 selection <- tab5_bop_bopAcc |>
-  select(Id, colHeader) |>
+  select(Id, colHeader, order) |>
   rename(ACCOUNT = Id)
 
 selection$TIME_PERIOD <- colHeader
@@ -281,6 +298,7 @@ colnames(selection)[2] <- "OBS_VALUE"
 #Process first record
 
 tab5_bop_DT <- selection |>
+  arrange(order) |>
   mutate(FREQ = ifelse(nchar(TIME_PERIOD)==4, "A", "Q"),
          REF_AREA = "FJ",
          INDICATOR = "AMT",
@@ -290,17 +308,19 @@ tab5_bop_DT <- selection |>
          OBS_COMMENT = "",   
          DECIMALS = 1
          
-  )
+  ) |>
+  select(-order)
 
-index = 3
+index = 4
 total_columns <- ncol(tab5_bop_bopAcc)
 
 while (index <= total_columns){
   ncolHead <- colnames(tab5_bop_bopAcc)[index]
-  nextData <- tab5_bop_bopAcc |> select(Id, ncolHead) |> rename(ACCOUNT = Id)
+  nextData <- tab5_bop_bopAcc |> select(Id, ncolHead, order) |> rename(ACCOUNT = Id)
   nextData$TIME_PERIOD <- ncolHead
   colnames(nextData)[2] <- "OBS_VALUE"
   nextData <- nextData |>
+    arrange(order) |>
     mutate(FREQ = ifelse(nchar(TIME_PERIOD)==4, "A", "Q"),
            REF_AREA = "FJ",
            INDICATOR = "AMT",
@@ -310,8 +330,10 @@ while (index <= total_columns){
                                ifelse(grepl("p", TIME_PERIOD), "P", "")),
            OBS_COMMENT = "",
            DECIMALS = 1,
-           #TIME_PERIOD = substr(TIME_PERIOD, 1, 4)
-    )
+           TIME_PERIOD = gsub("\\s*\\[(r|p)\\]", "", TIME_PERIOD)
+           
+    ) |>
+    select(-order)
   
   tab5_bop_DT <- rbind(tab5_bop_DT, nextData)
   index <- index + 1
