@@ -75,7 +75,7 @@ tab1_bop_DT <- tab1_bop_DT |>
   select(FREQ, REF_AREA, INDICATOR, ACCOUNT, TIME_PERIOD, OBS_VALUE, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
 
 #Write final final to the csv ouput file
-write.csv(tab1_bop_DT, "../output/bop/1_BALANCE_OF_PAYMENT.csv")
+write.csv(tab1_bop_DT, "../output/bop/1_BALANCE_OF_PAYMENT.csv", row.names = FALSE)
 
 #### *************************** Process tab2_BOP ****************************************** ####
 
@@ -142,7 +142,7 @@ tab2_bop_DT <- tab2_bop_DT |>
   select(FREQ, REF_AREA, INDICATOR, ACCOUNT, TIME_PERIOD, OBS_VALUE, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
 
 #Write final final to the csv ouput file
-write.csv(tab2_bop_DT, "../output/bop/2_CURRENT_ACCOUNTS_GOODS_SERVICES.csv")
+write.csv(tab2_bop_DT, "../output/bop/2_CURRENT_ACCOUNTS_GOODS_SERVICES.csv", row.names = FALSE)
 
 
 #### *************************** Process tab3_BOP ****************************************** ####
@@ -209,7 +209,7 @@ tab3_bop_DT <- tab3_bop_DT |>
   select(FREQ, REF_AREA, INDICATOR, ACCOUNT, TIME_PERIOD, OBS_VALUE, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
 
 #Write final final to the csv ouput file
-write.csv(tab3_bop_DT, "../output/bop/3_PRIMARY_AND_SECONDARY_INCOME.csv")
+write.csv(tab3_bop_DT, "../output/bop/3_PRIMARY_AND_SECONDARY_INCOME.csv", row.names = FALSE)
 
 
 #### *************************** Process tab4_BOP ****************************************** ####
@@ -277,7 +277,7 @@ tab4_bop_DT <- tab4_bop_DT |>
   select(FREQ, REF_AREA, INDICATOR, ACCOUNT, TIME_PERIOD, OBS_VALUE, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
 
 #Write final final to the csv ouput file
-write.csv(tab4_bop_DT, "../output/bop/4_CAPITAL_ACCOUNT.csv")
+write.csv(tab4_bop_DT, "../output/bop/4_CAPITAL_ACCOUNT.csv", row.names = FALSE)
 
 
 #### *************************** Process tab5_BOP ****************************************** ####
@@ -345,15 +345,5 @@ tab5_bop_DT <- tab5_bop_DT |>
   select(FREQ, REF_AREA, INDICATOR, ACCOUNT, TIME_PERIOD, OBS_VALUE, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
 
 #Write final final to the csv ouput file
-write.csv(tab5_bop_DT, "../output/bop/5_FINANCIAL_ACCOUNTS.csv")
-
-
-
-
-
-
-
-
-
-
+write.csv(tab5_bop_DT, "../output/bop/5_FINANCIAL_ACCOUNTS.csv", row.names = FALSE)
 
