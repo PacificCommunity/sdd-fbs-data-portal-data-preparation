@@ -13,7 +13,8 @@ rgdpWeight <- read_excel("../data/rgdp_data.xlsx", sheet = "RGDP_VAL")
 rgdpWeight_DT <- rgdpWeight |>
   select(id, bWeight) |>
   rename(INDUSTRY = id, OBS_VALUE = bWeight) |>
-  mutate(FREQ = "A",
+  mutate(DATAFLOW = "FBOS:DF_GDP(1.0)",
+         FREQ = "A",
          TIME_PERIOD = "_T",
          REF_AREA = "FJ",
          INDICATOR = "RGDP",
@@ -29,7 +30,7 @@ rgdpWeight_DT <- rgdpWeight |>
 
 #re-order the columns in the proper order
 rgdpWeight_DT <- rgdpWeight_DT |>
-  select(FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
+  select(DATAFLOW, FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
 
 #Remove the bWeight column from the dataframe
 
@@ -45,7 +46,8 @@ colnames(selection)[2] <- "OBS_VALUE"
 
 #Get first record
 rgdp <- selection |>
-  mutate(FREQ = "A",
+  mutate(DATAFLOW = "FBOS:DF_GDP(1.0)",
+         FREQ = "A",
          REF_AREA = "FJ",
          INDICATOR = ifelse(TIME_PERIOD =="Bweight", "WGT", 
                                         ifelse(label == "Nominal GDP", "NGDP", 
@@ -79,7 +81,8 @@ while (index <= total_columns){
   colnames(nextData)[2] <- "OBS_VALUE"
   nextData$OBS_VALUE <- as.numeric(nextData$OBS_VALUE)
   nextData <- nextData |>
-    mutate(FREQ = "A",
+    mutate(DATAFLOW = "FBOS:DF_GDP(1.0)", 
+           FREQ = "A",
            REF_AREA = "FJ",
            INDICATOR = ifelse(TIME_PERIOD =="Bweight", "WGT", 
                               ifelse(label == "Nominal GDP", "NGDP", 
@@ -106,7 +109,7 @@ while (index <= total_columns){
 }
 
 rgdp_DT <- rgdp |>
-  select(FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
+  select(DATAFLOW, FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
 
 #Combine the datatables together
 
@@ -128,7 +131,8 @@ colnames(selection)[2] <- "OBS_VALUE"
 
 #Get first record
 rgdpPercent <- selection |>
-  mutate(FREQ = "A",
+  mutate(DATAFLOW = "FBOS:DF_GDP(1.0)",
+         FREQ = "A",
          REF_AREA = "FJ",
          INDICATOR = ifelse(TIME_PERIOD =="Bweight", "WGT", 
                             ifelse(label == "Nominal GDP", "NGDP", 
@@ -161,7 +165,8 @@ while (index <= total_columns){
   colnames(nextData)[2] <- "OBS_VALUE"
   nextData$OBS_VALUE <- as.numeric(nextData$OBS_VALUE)
   nextData <- nextData |>
-    mutate(FREQ = "A",
+    mutate(DATAFLOW = "FBOS:DF_GDP(1.0)",
+           FREQ = "A",
            REF_AREA = "FJ",
            INDICATOR = ifelse(TIME_PERIOD =="Bweight", "WGT", 
                               ifelse(label == "Nominal GDP", "NGDP", 
@@ -192,7 +197,7 @@ while (index <= total_columns){
 realGDP_combine <- rbind(realgdp, rgdpPercent)
 
 realGDP_combine <- realGDP_combine |>
-  select(FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
+  select(DATAFLOW, FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
 
 #Write the real gdp table to the output folder
 write.csv(realGDP_combine, "../output/na/2_GDP_REAL_BY_INDUSTRY.csv.csv", row.names = FALSE)
@@ -213,7 +218,8 @@ colnames(selection)[2] <- "OBS_VALUE"
 
 #Get first record
 ngdpVal <- selection |>
-  mutate(FREQ = "A",
+  mutate(DATAFLOW = "FBOS:DF_GDP(1.0)",
+         FREQ = "A",
          REF_AREA = "FJ",
          INDICATOR = ifelse(TIME_PERIOD =="Bweight", "WGT", 
                             ifelse(label == "Nominal GDP", "NGDP", 
@@ -246,7 +252,8 @@ while (index <= total_columns){
   colnames(nextData)[2] <- "OBS_VALUE"
   nextData$OBS_VALUE <- as.numeric(nextData$OBS_VALUE)
   nextData <- nextData |>
-    mutate(FREQ = "A",
+    mutate(DATAFLOW = "FBOS:DF_GDP(1.0)",
+           FREQ = "A",
            REF_AREA = "FJ",
            INDICATOR = ifelse(TIME_PERIOD =="Bweight", "WGT", 
                               ifelse(label == "Nominal GDP", "NGDP", 
@@ -286,7 +293,8 @@ colnames(selection)[2] <- "OBS_VALUE"
 
 #Get first record
 ngdpPercent <- selection |>
-  mutate(FREQ = "A",
+  mutate(DATAFLOW = "FBOS:DF_GDP(1.0)",
+         FREQ = "A",
          REF_AREA = "FJ",
          INDICATOR = ifelse(TIME_PERIOD =="Bweight", "WGT", 
                             ifelse(label == "Nominal GDP", "NGDP", 
@@ -320,7 +328,8 @@ while (index <= total_columns){
   colnames(nextData)[2] <- "OBS_VALUE"
   nextData$OBS_VALUE <- as.numeric(nextData$OBS_VALUE)
   nextData <- nextData |>
-    mutate(FREQ = "A",
+    mutate(DATAFLOW = "FBOS:DF_GDP(1.0)",
+           FREQ = "A",
            REF_AREA = "FJ",
            INDICATOR = ifelse(TIME_PERIOD =="Bweight", "WGT", 
                               ifelse(label == "Nominal GDP", "NGDP", 
@@ -351,7 +360,7 @@ while (index <= total_columns){
 combine_nominal_gdp <- rbind(ngdpVal, ngdpPercent)
 
 combine_nominal_gdp <- combine_nominal_gdp |>
-  select(FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
+  select(DATAFLOW, FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
 
 #Write the final file to the output folder
 write.csv(combine_nominal_gdp, "../output/na/1_GDP_NOMINAL_BY_INDUSTRY.csv", row.names = FALSE)
@@ -370,7 +379,8 @@ colnames(selection)[2] <- "OBS_VALUE"
 
 #Get first record
 rgdpContribution <- selection |>
-  mutate(FREQ = "A",
+  mutate(DATAFLOW = "FBOS:DF_GDP(1.0)",
+         FREQ = "A",
          REF_AREA = "FJ",
          INDICATOR = ifelse(TIME_PERIOD =="Bweight", "WGT", 
                             ifelse(label == "Nominal GDP", "NGDP", 
@@ -404,7 +414,8 @@ while (index <= total_columns){
   colnames(nextData)[2] <- "OBS_VALUE"
   nextData$OBS_VALUE <- as.numeric(nextData$OBS_VALUE)
   nextData <- nextData |>
-    mutate(FREQ = "A",
+    mutate(DATAFLOW = "FBOS:DF_GDP(1.0)",
+           FREQ = "A",
            REF_AREA = "FJ",
            INDICATOR = ifelse(TIME_PERIOD =="Bweight", "WGT", 
                               ifelse(label == "Nominal GDP", "NGDP", 
@@ -432,7 +443,7 @@ while (index <= total_columns){
 
 #Combing the nominal gdp and gdp percent change
 rgdpContribution <- rgdpContribution |>
-  select(FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
+  select(DATAFLOW, FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
 
 #Write gdp contribution to the output folder
 write.csv(rgdpContribution, "../output/na/3_GDP_CONTRIBUTION.csv", row.names = FALSE)
@@ -451,7 +462,8 @@ colnames(selection)[2] <- "OBS_VALUE"
 
 #Get first record
 gdpMarket <- selection |>
-  mutate(FREQ = "A",
+  mutate(DATAFLOW = "FBOS:DF_GDP(1.0)",
+         FREQ = "A",
          REF_AREA = "FJ",
          INDICATOR = ifelse(TIME_PERIOD =="Bweight", "WGT", 
                             ifelse(label == "Nominal GDP", "NGDP", 
@@ -487,7 +499,8 @@ while (index <= total_columns){
   nextData$OBS_VALUE <- as.numeric(nextData$OBS_VALUE)
   nextData <- nextData |>
     rename(INDUSTRY = id) |>
-    mutate(FREQ = "A",
+    mutate(DATAFLOW = "FBOS:DF_GDP(1.0)",
+           FREQ = "A",
            REF_AREA = "FJ",
            INDICATOR = ifelse(TIME_PERIOD =="Bweight", "WGT", 
                               ifelse(label == "Nominal GDP", "NGDP", 
@@ -517,7 +530,7 @@ while (index <= total_columns){
 
 #Combing the nominal gdp and gdp percent change
 gdpMarket <- gdpMarket |>
-  select(FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
+  select(DATAFLOW, FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
 
 
 #### ************************** GDP market and non market contribution percentage***************************************** ####
@@ -534,7 +547,8 @@ colnames(selection)[2] <- "OBS_VALUE"
 
 #Get first record
 gdpMarket_per <- selection |>
-  mutate(FREQ = "A",
+  mutate(DATAFLOW = "FBOS:DF_GDP(1.0)",
+         FREQ = "A",
          REF_AREA = "FJ",
          INDICATOR = ifelse(TIME_PERIOD =="Bweight", "WGT", 
                             ifelse(label == "Nominal GDP", "NGDP", 
@@ -570,7 +584,8 @@ while (index <= total_columns){
   nextData$OBS_VALUE <- as.numeric(nextData$OBS_VALUE)
   nextData <- nextData |>
     rename(INDUSTRY = id) |>
-    mutate(FREQ = "A",
+    mutate(DATAFLOW = "FBOS:DF_GDP(1.0)",
+           FREQ = "A",
            REF_AREA = "FJ",
            INDICATOR = ifelse(TIME_PERIOD =="Bweight", "WGT", 
                               ifelse(label == "Nominal GDP", "NGDP", 
@@ -617,7 +632,8 @@ colnames(selection)[2] <- "OBS_VALUE"
 
 #Get first record
 gdp_formal_informal_DT <- selection |>
-  mutate(FREQ = "A",
+  mutate(DATAFLOW = "FBOS:DF_GDP(1.0)",
+         FREQ = "A",
          REF_AREA = "FJ",
          INDICATOR = ifelse(TIME_PERIOD =="Bweight", "WGT", 
                             ifelse(label == "Nominal GDP", "NGDP", 
@@ -659,7 +675,8 @@ while (index <= total_columns){
   nextData$OBS_VALUE <- as.numeric(nextData$OBS_VALUE)
   nextData <- nextData |>
     rename(INDUSTRY = id) |>
-    mutate(FREQ = "A",
+    mutate(DATAFLOW = "FBOS:DF_GDP(1.0)",
+           FREQ = "A",
            REF_AREA = "FJ",
            INDICATOR = ifelse(TIME_PERIOD =="Bweight", "WGT", 
                               ifelse(label == "Nominal GDP", "NGDP", 
@@ -694,7 +711,7 @@ while (index <= total_columns){
 
 #Combing the nominal gdp and gdp percent change
 gdp_formal_informal_DT <- gdp_formal_informal_DT |>
-  select(FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
+  select(DATAFLOW, FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
 
 
 #### ************************** GDP formal and informal contribution percentages ***************************************** ####
@@ -711,7 +728,8 @@ colnames(selection)[2] <- "OBS_VALUE"
 
 #Get first record
 gdp_formal_informal_per_DT <- selection |>
-  mutate(FREQ = "A",
+  mutate(DATAFLOW = "FBOS:DF_GDP(1.0)",
+         FREQ = "A",
          REF_AREA = "FJ",
          INDICATOR = ifelse(TIME_PERIOD =="Bweight", "WGT", 
                             ifelse(label == "Nominal GDP", "NGDP", 
@@ -753,7 +771,8 @@ while (index <= total_columns){
   nextData$OBS_VALUE <- as.numeric(nextData$OBS_VALUE)
   nextData <- nextData |>
     rename(INDUSTRY = id) |>
-    mutate(FREQ = "A",
+    mutate(DATAFLOW = "FBOS:DF_GDP(1.0)",
+           FREQ = "A",
            REF_AREA = "FJ",
            INDICATOR = ifelse(TIME_PERIOD =="Bweight", "WGT", 
                               ifelse(label == "Nominal GDP", "NGDP", 
@@ -788,7 +807,7 @@ while (index <= total_columns){
 
 #Combing the nominal gdp and gdp percent change
 gdp_formal_informal_per_DT <- gdp_formal_informal_per_DT |>
-  select(FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
+  select(DATAFLOW, FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
 
 #Combine the two dataframes together
 
@@ -813,7 +832,8 @@ colnames(selection)[2] <- "OBS_VALUE"
 
 #Get first record
 gdp_gross_output_DT <- selection |>
-  mutate(FREQ = "A",
+  mutate(DATAFLOW = "FBOS:DF_GDP(1.0)",
+         FREQ = "A",
          REF_AREA = "FJ",
          INDICATOR = "NGO",
          GDP_BREAKDOWN = ifelse(label == "Formal", "FOR",
@@ -850,7 +870,8 @@ while (index <= total_columns){
   nextData$OBS_VALUE <- as.numeric(nextData$OBS_VALUE)
   nextData <- nextData |>
     rename(INDUSTRY = id) |>
-    mutate(FREQ = "A",
+    mutate(DATAFLOW = "FBOS:DF_GDP(1.0)",
+           FREQ = "A",
            REF_AREA = "FJ",
            INDICATOR = "NGO",
            GDP_BREAKDOWN = ifelse(label == "Formal", "FOR",
@@ -892,7 +913,8 @@ colnames(selection)[2] <- "OBS_VALUE"
 
 #Get first record
 gdp_intermediate_cost_DT <- selection |>
-  mutate(FREQ = "A",
+  mutate(DATAFLOW = "FBOS:DF_GDP(1.0)",
+         FREQ = "A",
          REF_AREA = "FJ",
          INDICATOR = "NIC",
          GDP_BREAKDOWN = ifelse(label == "Formal", "FOR",
@@ -929,7 +951,8 @@ while (index <= total_columns){
   nextData$OBS_VALUE <- as.numeric(nextData$OBS_VALUE)
   nextData <- nextData |>
     rename(INDUSTRY = id) |>
-    mutate(FREQ = "A",
+    mutate(DATAFLOW = "FBOS:DF_GDP(1.0)",
+           FREQ = "A",
            REF_AREA = "FJ",
            INDICATOR = "NIC",
            GDP_BREAKDOWN = ifelse(label == "Formal", "FOR",
@@ -962,7 +985,7 @@ nominal_gross_intermediate <- rbind(gdp_gross_output_DT, gdp_intermediate_cost_D
 
 #Reorder the columns
 nominal_gross_intermediate <- nominal_gross_intermediate |>
-  select(FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
+  select(DATAFLOW, FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
 
 #write the final datframe to the output csv file
 
@@ -983,7 +1006,8 @@ colnames(selection)[2] <- "OBS_VALUE"
 
 #Get first record
 real_gdp_gross_output_DT <- selection |>
-  mutate(FREQ = "A",
+  mutate(DATAFLOW = "FBOS:DF_GDP(1.0)",
+         FREQ = "A",
          REF_AREA = "FJ",
          INDICATOR = "RGO",
          GDP_BREAKDOWN = ifelse(label == "Formal", "FOR",
@@ -1020,7 +1044,8 @@ while (index <= total_columns){
   nextData$OBS_VALUE <- as.numeric(nextData$OBS_VALUE)
   nextData <- nextData |>
     rename(INDUSTRY = id) |>
-    mutate(FREQ = "A",
+    mutate(DATAFLOW = "FBOS:DF_GDP(1.0)",
+           FREQ = "A",
            REF_AREA = "FJ",
            INDICATOR = "RGO",
            GDP_BREAKDOWN = ifelse(label == "Formal", "FOR",
@@ -1062,7 +1087,8 @@ colnames(selection)[2] <- "OBS_VALUE"
 
 #Get first record
 real_gdp_intermediate_cost_DT <- selection |>
-  mutate(FREQ = "A",
+  mutate(DATAFLOW = "FBOS:DF_GDP(1.0)",
+         FREQ = "A",
          REF_AREA = "FJ",
          INDICATOR = "RIC",
          GDP_BREAKDOWN = ifelse(label == "Formal", "FOR",
@@ -1099,7 +1125,8 @@ while (index <= total_columns){
   nextData$OBS_VALUE <- as.numeric(nextData$OBS_VALUE)
   nextData <- nextData |>
     rename(INDUSTRY = id) |>
-    mutate(FREQ = "A",
+    mutate(DATAFLOW = "FBOS:DF_GDP(1.0)",
+           FREQ = "A",
            REF_AREA = "FJ",
            INDICATOR = "RIC",
            GDP_BREAKDOWN = ifelse(label == "Formal", "FOR",
@@ -1132,7 +1159,7 @@ real_gross_intermediate <- rbind(real_gdp_gross_output_DT, real_gdp_intermediate
 
 #Reorder the columns
 real_gross_intermediate <- real_gross_intermediate |>
-  select(FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
+  select(DATAFLOW, FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
 
 #write the final datframe to the output csv file
 
@@ -1153,7 +1180,8 @@ colnames(selection)[2] <- "OBS_VALUE"
 
 #Get first record
 nominal_gdp_detail_DT <- selection |>
-  mutate(FREQ = "A",
+  mutate(DATAFLOW = "FBOS:DF_GDP(1.0)",
+         FREQ = "A",
          REF_AREA = "FJ",
          INDICATOR = ifelse(TIME_PERIOD =="Bweight", "WGT", 
                             ifelse(label == "Nominal GDP", "NGDP", 
@@ -1195,7 +1223,8 @@ while (index <= total_columns){
   nextData$OBS_VALUE <- as.numeric(nextData$OBS_VALUE)
   nextData <- nextData |>
     rename(INDUSTRY = id) |>
-    mutate(FREQ = "A",
+    mutate(DATAFLOW = "FBOS:DF_GDP(1.0)",
+           FREQ = "A",
            REF_AREA = "FJ",
            INDICATOR = ifelse(TIME_PERIOD =="Bweight", "WGT", 
                               ifelse(label == "Nominal GDP", "NGDP", 
@@ -1231,7 +1260,7 @@ while (index <= total_columns){
 
 #Reorder the columns
 nominal_gdp_detail_DT <- nominal_gdp_detail_DT |>
-  select(FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
+  select(DATAFLOW, FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
 
 #write the final datframe to the output csv file
 
@@ -1253,7 +1282,8 @@ colnames(selection)[2] <- "OBS_VALUE"
 
 #Get first record
 real_gdp_detail_DT <- selection |>
-  mutate(FREQ = "A",
+  mutate(DATAFLOW = "FBOS:DF_GDP(1.0)",
+         FREQ = "A",
          REF_AREA = "FJ",
          INDICATOR = ifelse(TIME_PERIOD =="Bweight", "WGT", 
                             ifelse(label == "Nominal GDP", "NGDP", 
@@ -1296,7 +1326,8 @@ while (index <= total_columns){
   nextData$OBS_VALUE <- as.numeric(nextData$OBS_VALUE)
   nextData <- nextData |>
     rename(INDUSTRY = id) |>
-    mutate(FREQ = "A",
+    mutate(DATAFLOW = "FBOS:DF_GDP(1.0)",
+           FREQ = "A",
            REF_AREA = "FJ",
            INDICATOR = ifelse(TIME_PERIOD =="Bweight", "WGT", 
                               ifelse(label == "Nominal GDP", "NGDP", 
@@ -1333,7 +1364,7 @@ while (index <= total_columns){
 
 #Reorder the columns
 real_gdp_detail_DT <- real_gdp_detail_DT |>
-  select(FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
+  select(DATAFLOW, FREQ, REF_AREA, INDICATOR, INDUSTRY, GDP_BREAKDOWN, TRANSFORMATION, TIME_PERIOD, OBS_VALUE, BASE_PER, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
 
 #write the final datframe to the output csv file
 
