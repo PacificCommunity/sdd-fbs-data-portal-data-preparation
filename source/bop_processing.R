@@ -43,7 +43,8 @@ while (i <= length(sheets)) {
   
   datatable <- selection |>
     arrange(order) |>
-    mutate(REF_AREA = "FJ",
+    mutate(DATAFLOW = "FBOS:DF_BOP(1.0)",
+           REF_AREA = "FJ",
            INDICATOR = "AMT",
            UNIT_MEASURE = "FJD",
            UNIT_MULT = 6,
@@ -68,7 +69,8 @@ while (i <= length(sheets)) {
     nextData$TIME_PERIOD <- gsub("\\s*\\[(r|p)\\]", "", nextData$TIME_PERIOD)
     nextData <- nextData |>
       arrange(order) |>
-      mutate(REF_AREA = "FJ",
+      mutate(DATAFLOW = "FBOS:DF_BOP(1.0)",
+             REF_AREA = "FJ",
              INDICATOR = "AMT",
              UNIT_MEASURE = "FJD",
              UNIT_MULT = 6,
@@ -82,7 +84,7 @@ while (i <= length(sheets)) {
   }
   
   datatable <- datatable |>
-    select(FREQ, REF_AREA, INDICATOR, ACCOUNT, TIME_PERIOD, OBS_VALUE, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
+    select(DATAFLOW, FREQ, REF_AREA, INDICATOR, ACCOUNT, TIME_PERIOD, OBS_VALUE, UNIT_MEASURE, UNIT_MULT, OBS_STATUS, OBS_COMMENT, DECIMALS)
   
   #Write final final to the csv ouput file
   output_file <- paste0("../output/bop/" ,sheets[i], ".csv")
