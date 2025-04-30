@@ -12,7 +12,8 @@ setwd(repository)
 cpiWeight <- read_excel("../data/cpi_data.xlsx", sheet = "weight")
 
 cpiWeight <- cpiWeight |>
-  mutate(FREQ = "A",
+  mutate(DATAFLOW = "FBOS:DF_CPI(1.0)",
+         FREQ = "A",
          TIME_PERIOD = "_T",
          REF_AREA = "FJ",
          INDICATOR = "WGT",
@@ -42,7 +43,8 @@ colnames(selection)[2] <- "OBS_VALUE"
 
 #Get first record
 cpiIndex <- selection |>
-  mutate(FREQ = ifelse(nchar(TIME_PERIOD) == 4, "A", "M"),
+  mutate(DATAFLOW = "FBOS:DF_CPI(1.0)",
+         FREQ = ifelse(nchar(TIME_PERIOD) == 4, "A", "M"),
          REF_AREA = "FJ",
          INDICATOR = "IDX",
          TRANSFORMATION = ifelse(nchar(TIME_PERIOD)==4, "GIY", "G1M"),
@@ -66,16 +68,17 @@ while (index <= total_columns){
   colnames(nextData)[2] <- "OBS_VALUE"
   nextData$OBS_VALUE <- as.numeric(nextData$OBS_VALUE)
   nextData <- nextData |>
-    mutate(FREQ = ifelse(nchar(TIME_PERIOD) == 4, "A", "M"),
-    REF_AREA = "FJ",
-    INDICATOR = "IDX",
-    TRANSFORMATION = ifelse(nchar(TIME_PERIOD)==4, "GIY", "G1M"),
-    SEASONAL_ADJUST = "S",
-    UNIT_MEASURE = "INDEX",
-    BASE_YEAR = "",
-    OBS_STATUS = "",
-    COMMENT = "",
-    DECIMALS = 1
+    mutate(DATAFLOW = "FBOS:DF_CPI(1.0)",
+           FREQ = ifelse(nchar(TIME_PERIOD) == 4, "A", "M"),
+           REF_AREA = "FJ",
+           INDICATOR = "IDX",
+           TRANSFORMATION = ifelse(nchar(TIME_PERIOD)==4, "GIY", "G1M"),
+           SEASONAL_ADJUST = "S",
+           UNIT_MEASURE = "INDEX",
+           BASE_YEAR = "",
+           OBS_STATUS = "",
+           COMMENT = "",
+           DECIMALS = 1
     ) |>
   rename(ITEM = item)
   
@@ -93,7 +96,8 @@ fbsCPITable <- rbind(cpiWeight, cpiIndex)
 mmSeasonal <- read_excel("../data/cpi_data.xlsx", sheet = "mnthSeasonal")
 
 mmSeasonal <- mmSeasonal |>
-  mutate(FREQ = "M",
+  mutate(DATAFLOW = "FBOS:DF_CPI(1.0)",
+         FREQ = "M",
          TIME_PERIOD = period,
          REF_AREA = "FJ",
          INDICATOR = "IDX",
@@ -129,7 +133,8 @@ colnames(selection)[2] <- "OBS_VALUE"
 
 #Get first record
 mmIndex <- selection |>
-  mutate(FREQ = ifelse(nchar(TIME_PERIOD) == 4, "A", "M"),
+  mutate(DATAFLOW = "FBOS:DF_CPI(1.0)",
+         FREQ = ifelse(nchar(TIME_PERIOD) == 4, "A", "M"),
          REF_AREA = "FJ",
          INDICATOR = "IDX",
          TRANSFORMATION = ifelse(nchar(TIME_PERIOD)==4, "GIY", "G1M"),
@@ -153,7 +158,8 @@ while (index <= total_columns){
   colnames(nextData)[2] <- "OBS_VALUE"
   nextData$OBS_VALUE <- as.numeric(nextData$OBS_VALUE)
   nextData <- nextData |>
-    mutate(FREQ = ifelse(nchar(TIME_PERIOD) == 4, "A", "M"),
+    mutate(DATAFLOW = "FBOS:DF_CPI(1.0)",
+           FREQ = ifelse(nchar(TIME_PERIOD) == 4, "A", "M"),
            REF_AREA = "FJ",
            INDICATOR = "IDX",
            TRANSFORMATION = ifelse(nchar(TIME_PERIOD)==4, "GIY", "G1M"),
@@ -179,7 +185,8 @@ mmSeasonal <- read_excel("../data/cpi_data.xlsx", sheet = "natChange")
 
 mmSeasonal <- mmSeasonal |>
   select(TIME_PERIOD, OBS_VALUE) |>
-  mutate(FREQ = ifelse(nchar(TIME_PERIOD)==4, "A", "M"),
+  mutate(DATAFLOW = "FBOS:DF_CPI(1.0)",
+         FREQ = ifelse(nchar(TIME_PERIOD)==4, "A", "M"),
          REF_AREA = "FJ",
          INDICATOR = "IDX",
          ITEM = "_T",
@@ -204,7 +211,8 @@ avgInflation <- read_excel("../data/cpi_data.xlsx", sheet = "natChange")
 avgInflation <- avgInflation |>
   filter(!is.na(avgInflation)) |>
   select(TIME_PERIOD, avgInflation) |>
-  mutate(FREQ = ifelse(nchar(TIME_PERIOD)==4, "A", "M"),
+  mutate(DATAFLOW = "FBOS:DF_CPI(1.0)",
+         FREQ = ifelse(nchar(TIME_PERIOD)==4, "A", "M"),
          REF_AREA = "FJ",
          INDICATOR = "IDX",
          ITEM = "_T",
@@ -238,7 +246,8 @@ colnames(selection)[2] <- "OBS_VALUE"
 
 #Get first record
 natCPIIndex <- selection |>
-  mutate(FREQ = ifelse(nchar(TIME_PERIOD) == 4, "A", "M"),
+  mutate(DATAFLOW = "FBOS:DF_CPI(1.0)",
+         FREQ = ifelse(nchar(TIME_PERIOD) == 4, "A", "M"),
          REF_AREA = "FJ",
          INDICATOR = "IDX",
          TRANSFORMATION = ifelse(nchar(TIME_PERIOD)==4, "GIY", "G1M"),
@@ -262,7 +271,8 @@ while (index <= total_columns){
   colnames(nextData)[2] <- "OBS_VALUE"
   nextData$OBS_VALUE <- as.numeric(nextData$OBS_VALUE)
   nextData <- nextData |>
-    mutate(FREQ = ifelse(nchar(TIME_PERIOD) == 4, "A", "M"),
+    mutate(DATAFLOW = "FBOS:DF_CPI(1.0)",
+           FREQ = ifelse(nchar(TIME_PERIOD) == 4, "A", "M"),
            REF_AREA = "FJ",
            INDICATOR = "IDX",
            TRANSFORMATION = ifelse(nchar(TIME_PERIOD)==4, "GIY", "G1M"),
@@ -291,7 +301,8 @@ centralInflation <- read_excel("../data/cpi_data.xlsx", sheet = "centralInflatio
 centralInflation <- centralInflation |>
   filter(!is.na(avgInflation)) |>
   select(TIME_PERIOD, avgInflation) |>
-  mutate(FREQ = ifelse(nchar(TIME_PERIOD)==4, "A", "M"),
+  mutate(DATAFLOW = "FBOS:DF_CPI(1.0)",
+         FREQ = ifelse(nchar(TIME_PERIOD)==4, "A", "M"),
          REF_AREA = "FJCD",
          INDICATOR = "IDX",
          ITEM = "_T",
@@ -323,7 +334,8 @@ colnames(selection)[2] <- "OBS_VALUE"
 
 #Get first record
 centralCPIIndex <- selection |>
-  mutate(FREQ = ifelse(nchar(TIME_PERIOD) == 4, "A", "M"),
+  mutate(DATAFLOW = "FBOS:DF_CPI(1.0)",
+         FREQ = ifelse(nchar(TIME_PERIOD) == 4, "A", "M"),
          REF_AREA = "FJCD",
          INDICATOR = "IDX",
          TRANSFORMATION = ifelse(nchar(TIME_PERIOD)==4, "GIY", "G1M"),
@@ -347,7 +359,8 @@ while (index <= total_columns){
   colnames(nextData)[2] <- "OBS_VALUE"
   nextData$OBS_VALUE <- as.numeric(nextData$OBS_VALUE)
   nextData <- nextData |>
-    mutate(FREQ = ifelse(nchar(TIME_PERIOD) == 4, "A", "M"),
+    mutate(DATAFLOW = "FBOS:DF_CPI(1.0)",
+           FREQ = ifelse(nchar(TIME_PERIOD) == 4, "A", "M"),
            REF_AREA = "FJCD",
            INDICATOR = "IDX",
            TRANSFORMATION = ifelse(nchar(TIME_PERIOD)==4, "GIY", "G1M"),
@@ -375,7 +388,8 @@ westernInflation <- read_excel("../data/cpi_data.xlsx", sheet = "westernInflatio
 westernInflation <- westernInflation |>
   filter(!is.na(avgInflation)) |>
   select(TIME_PERIOD, avgInflation) |>
-  mutate(FREQ = ifelse(nchar(TIME_PERIOD)==4, "A", "M"),
+  mutate(DATAFLOW = "FBOS:DF_CPI(1.0)",
+         FREQ = ifelse(nchar(TIME_PERIOD)==4, "A", "M"),
          REF_AREA = "FJWD",
          INDICATOR = "IDX",
          ITEM = "_T",
@@ -408,7 +422,8 @@ colnames(selection)[2] <- "OBS_VALUE"
 
 #Get first record
 westernCPIIndex <- selection |>
-  mutate(FREQ = ifelse(nchar(TIME_PERIOD) == 4, "A", "M"),
+  mutate(DATAFLOW = "FBOS:DF_CPI(1.0)",
+         FREQ = ifelse(nchar(TIME_PERIOD) == 4, "A", "M"),
          REF_AREA = "FJWD",
          INDICATOR = "IDX",
          TRANSFORMATION = ifelse(nchar(TIME_PERIOD)==4, "GIY", "G1M"),
@@ -432,7 +447,8 @@ while (index <= total_columns){
   colnames(nextData)[2] <- "OBS_VALUE"
   nextData$OBS_VALUE <- as.numeric(nextData$OBS_VALUE)
   nextData <- nextData |>
-    mutate(FREQ = ifelse(nchar(TIME_PERIOD) == 4, "A", "M"),
+    mutate(DATAFLOW = "FBOS:DF_CPI(1.0)",
+           FREQ = ifelse(nchar(TIME_PERIOD) == 4, "A", "M"),
            REF_AREA = "FJWD",
            INDICATOR = "IDX",
            TRANSFORMATION = ifelse(nchar(TIME_PERIOD)==4, "GIY", "G1M"),
@@ -459,7 +475,8 @@ northernInflation <- read_excel("../data/cpi_data.xlsx", sheet = "northernInflat
 northernInflation <- northernInflation |>
   filter(!is.na(OBS_VALUE)) |>
   select(TIME_PERIOD, OBS_VALUE) |>
-  mutate(FREQ = ifelse(nchar(TIME_PERIOD)==4, "A", "M"),
+  mutate(DATAFLOW = "FBOS:DF_CPI(1.0)",
+         FREQ = ifelse(nchar(TIME_PERIOD)==4, "A", "M"),
          REF_AREA = "FJND",
          INDICATOR = "IDX",
          ITEM = "_T",
@@ -490,7 +507,8 @@ colnames(selection)[2] <- "OBS_VALUE"
 
 #Get first record
 northernCPIIndex <- selection |>
-  mutate(FREQ = ifelse(nchar(TIME_PERIOD) == 4, "A", "M"),
+  mutate(DATAFLOW = "FBOS:DF_CPI(1.0)",
+         FREQ = ifelse(nchar(TIME_PERIOD) == 4, "A", "M"),
          REF_AREA = "FJND",
          INDICATOR = "IDX",
          TRANSFORMATION = ifelse(nchar(TIME_PERIOD)==4, "GIY", "G1M"),
@@ -514,7 +532,8 @@ while (index <= total_columns){
   colnames(nextData)[2] <- "OBS_VALUE"
   nextData$OBS_VALUE <- as.numeric(nextData$OBS_VALUE)
   nextData <- nextData |>
-    mutate(FREQ = ifelse(nchar(TIME_PERIOD) == 4, "A", "M"),
+    mutate(DATAFLOW = "FBOS:DF_CPI(1.0)",
+           FREQ = ifelse(nchar(TIME_PERIOD) == 4, "A", "M"),
            REF_AREA = "FJND",
            INDICATOR = "IDX",
            TRANSFORMATION = ifelse(nchar(TIME_PERIOD)==4, "GIY", "G1M"),
@@ -540,6 +559,7 @@ fbsCPITable <- rbind(fbsCPITable, northernCPIIndex)
 #re-order the columns in the proper order
 fbsCPITable <- fbsCPITable |>
   select(
+    DATAFLOW,
     FREQ,
     TIME_PERIOD,
     REF_AREA,
