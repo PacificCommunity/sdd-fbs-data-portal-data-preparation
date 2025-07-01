@@ -1369,7 +1369,3 @@ real_gdp_detail_DT <- real_gdp_detail_DT |>
 #write the final datframe to the output csv file
 
 write.csv(real_gdp_detail_DT, "../output/na/10_REAL_GDP_DETAIL.csv", row.names = FALSE)
-
-
-
-
