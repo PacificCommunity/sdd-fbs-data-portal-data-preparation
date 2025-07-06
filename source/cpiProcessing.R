@@ -29,7 +29,10 @@ while (i <= numsheet) {
     
     # Re-order the columns in the proper order
     table_long <- table_long |>
-      mutate(across(everything(), ~replace(., is.na(.), ""))) |>
+      mutate(across(everything(), ~replace(., is.na(.), "")),
+             SEASONAL_ADJUST = ifelse(ITEM == "S_T", "S", SEASONAL_ADJUST),
+             ITEM = ifelse(ITEM == "S_T", "_T", ITEM)
+             ) |>
       relocate(OBS_VALUE, .before = UNIT_MEASURE) |>
       relocate(ITEM, .before = TRANSFORMATION)
     
