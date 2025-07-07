@@ -3,7 +3,6 @@ library(dplyr)
 library(data.table)
 library(readxl)
 
-
 # Directory path
 repository <- file.path(dirname(rstudioapi::getSourceEditorContext()$path))
 setwd(repository)
@@ -33,14 +32,16 @@ while (i <= numsheet) {
     mutate(across(everything(), ~replace(., is.na(.), "")),
            TRANSFORMATION = ifelse(TIME_PERIOD == "Weight", "WGT", TRANSFORMATION),
            TIME_PERIOD = ifelse(TIME_PERIOD == "Weight", "2014", TIME_PERIOD),
+           # replace obs_status value to the values in the brackets
            OBS_STATUS = case_when(
              str_detect(TIME_PERIOD, "\\(YTD\\)") ~ "YTD",
              str_detect(TIME_PERIOD, "\\(P\\)") ~ "P",
              str_detect(TIME_PERIOD, "\\(R\\)") ~ "R",
              TRUE ~ ""),
+           # remove the brackets with the contents from the TIME_PERIOD values
            TIME_PERIOD = str_trim(str_remove_all(TIME_PERIOD, "\\s*\\(YTD\\)|\\s*\\(P\\)|\\s*\\(R\\)")),
            across(everything(), ~replace(., is.na(.), ""))
-    ) |>
+        ) |>
     relocate(OBS_VALUE, .before = UNIT_MEASURE) |>
     relocate(TIME_PERIOD, .before = TRANSFORMATION) |>
     filter(!is.na(OBS_VALUE) & OBS_VALUE != "")
