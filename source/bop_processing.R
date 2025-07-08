@@ -14,23 +14,23 @@ bopAcc <- read.csv("../data/bopAccounts.csv")
 file_path <- "../data/bopData.xlsx"
 
 # List all sheet names
-sheets <- excel_sheets(file_path)
+sheet_names <- excel_sheets(file_path)
 
 # Initialize counter
 i <- 1
 
 # Loop through all sheets
-while (i <= length(sheets)) {
+while (i <= length(sheet_names)) {
   # Read the current sheet
-  sheet <- read_excel(file_path, sheet = sheets[i])
-  sheet <- merge(sheet, bopAcc, by = "label")
-  sheet <- sheet |> 
+  table <- read_excel(file_path, sheet = sheet_names[i])
+  table <- merge(table, bopAcc, by = "label")
+  table <- table |> 
     relocate(ACCOUNT, .before = UNIT_MEASURE) |>
     arrange(order) |>
     select(-order, -label)
   
   # Re-organise the data using pivot_long
-  table_long <- sheet |>
+  table_long <- table |>
     pivot_longer(
       cols = -c(DATAFLOW:DECIMALS),
       names_to = "TIME_PERIOD",
