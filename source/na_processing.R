@@ -20,7 +20,7 @@ while (i <= numsheet) {
   # Process tables
   table <- read_excel(file_path, sheet = sheet_names[i])
   # Reshape from wide to long format
-  table_long <- table %>%
+  table_long <- table |>
     pivot_longer(
       cols = -c(DATAFLOW:DECIMALS),
       names_to = "TIME_PERIOD",
@@ -31,6 +31,11 @@ while (i <= numsheet) {
   table_long <- table_long |>
     mutate(across(everything(), ~replace(., is.na(.), "")),
            TRANSFORMATION = ifelse(TIME_PERIOD == "Weight", "WGT", TRANSFORMATION),
+           UNIT_MEASURE = ifelse(TIME_PERIOD == "Weight", "PT", UNIT_MEASURE),
+           UNIT_MULT = ifelse(TIME_PERIOD == "Weight", "", UNIT_MULT),
+           INDUSTRY = ifelse(TIME_PERIOD == "Weight", "_T", INDUSTRY),
+           INDICATOR = ifelse(TIME_PERIOD == "Weight", substr(INDICATOR, 1, 4), INDICATOR),
+           GDP_BREAKDOWN = ifelse(TIME_PERIOD == "Weight", "_T", GDP_BREAKDOWN),
            TIME_PERIOD = ifelse(TIME_PERIOD == "Weight", "2014", TIME_PERIOD),
            # replace obs_status value to the values in the brackets
            OBS_STATUS = case_when(
