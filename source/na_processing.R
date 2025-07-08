@@ -27,7 +27,7 @@ while (i <= numsheet) {
       values_to = "OBS_VALUE"
     )
   
-  # Re-order the columns in the proper order
+  # Re-order the columns in the proper order and re-imputing the column values 
   table_long <- table_long |>
     mutate(across(everything(), ~replace(., is.na(.), "")),
            TRANSFORMATION = ifelse(TIME_PERIOD == "Weight", "WGT", TRANSFORMATION),
